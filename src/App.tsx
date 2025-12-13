@@ -486,8 +486,13 @@ const ScrambledText = ({ text, delay = 0.5, speed = 40, className }) => {
   return <span className={className}>{displayText}</span>;
 };
 
-// Intersection Observer (Scroll Fade In)
-const ScrollFadeIn = ({ children, delay = 0, once = true }) => {
+type ScrollFadeInProps = {
+  children: React.ReactNode;
+  delay?: number;
+  once?: boolean;
+};
+
+const ScrollFadeIn = ({ children, delay = 0, once = true }: ScrollFadeInProps) => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -599,7 +604,12 @@ const useMagneticTilt = () => {
   return { cardRef, tilt, handleMouseMove, handleMouseLeave };
 };
 
-const MagneticServiceCard = ({ s, config }) => {
+type MagneticServiceCardProps = {
+  s: any;
+  config: any;
+};
+
+const MagneticServiceCard = ({ s, config }: MagneticServiceCardProps) => {
   const { cardRef, tilt, handleMouseMove, handleMouseLeave } =
     useMagneticTilt();
   const shiftX = tilt.y * 0.6;
@@ -1085,7 +1095,13 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 // ====================================================================
 // Dummy Components for completeness (FAQItem, ContactForm)
 // ====================================================================
-const FAQItem = ({ question, config }) => {
+
+type FAQItemProps = {
+  question: string;
+  config: any;
+};
+
+const FAQItem = ({ question, config }: FAQItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const bg = config.isDark ? "bg-gray-800/70" : "bg-gray-100/70";
   const hoverBg = config.isDark
