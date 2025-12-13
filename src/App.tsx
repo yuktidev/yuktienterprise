@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 // ====================================================================
 // 1. ICON SYSTEMS (Merged & Renamed)
@@ -268,7 +268,7 @@ const getThemeConfig = (theme) => {
 // ====================================================================
 
 // NEW: Themed Background (Refactored from GlowingBackground)
-const ThemedBackground = ({ theme, config }) => (
+const ThemedBackground = ({ config }) => (
   <div
     className={`fixed inset-0 z-0 pointer-events-none overflow-hidden transition-colors duration-500 ${config.baseBg}`}
   >
@@ -391,14 +391,14 @@ const TerminalDisplay = () => {
 
 // NEW: Section Spotlight Wrapper (Enhancement 1)
 const SectionSpotlight = ({ children, className = "", config }) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = useCallback((e) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    // const centerX = rect.left + rect.width / 2;
+    // const centerY = rect.top + rect.height / 2;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     setPosition({ x, y });
@@ -433,7 +433,7 @@ const ScrambledText = ({ text, delay = 0.5, speed = 40, className }) => {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;':\",./<>?`~";
   const frameCount = 10;
-  const timerRef = useRef(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let queue = finalString.split("").map((char, index) => ({
@@ -476,7 +476,9 @@ const ScrambledText = ({ text, delay = 0.5, speed = 40, className }) => {
       }, speed / frameCount);
     }, delay * 1000);
     return () => {
-      clearTimeout(timerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
       clearInterval(interval);
     };
   }, [finalString, delay, speed]);
@@ -575,7 +577,7 @@ const BentoCard = ({ title, icon, technologies, description, config }) => {
 
 // Magnetic Service Card
 const useMagneticTilt = () => {
-  const cardRef = useRef(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const handleMouseMove = useCallback((e) => {
     const card = cardRef.current;
@@ -895,7 +897,7 @@ const techData = [
 const useScrollState = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const sectionRefs = useRef({});
+  const sectionRefs = useRef<Record<string, HTMLElement>>({});
 
   useEffect(() => {
     const sections = ["home", "services", "tech-stack", "contact"];
@@ -941,7 +943,7 @@ const useScrollState = () => {
 // ====================================================================
 
 // Header Component (Adapted for Dark/Light Theme)
-const Header = ({ isScrolled, openAuthModal, theme, toggleTheme, config }) => {
+const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const navItems = ["Home", "Services", "Tech Stack", "Contact"];
 
@@ -1174,7 +1176,7 @@ const ContactForm = ({ config }) => {
             />
             <textarea
               placeholder="Tell us about your project..."
-              rows="4"
+              rows={4}
               className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
             ></textarea>
             <button
@@ -1397,7 +1399,7 @@ const YuktiGenesisSite = () => {
       className={`min-h-screen ${textPrimary} overflow-x-hidden relative transition-colors duration-500`}
     >
       {/* NEW: Global Themed Background (Z-0) */}
-      <ThemedBackground theme={theme} config={config} />
+      <ThemedBackground config={config} />
 
       {/* Auth Modal (Z-50) */}
       {isAuthModalOpen && (
@@ -1413,7 +1415,6 @@ const YuktiGenesisSite = () => {
       <Header
         isScrolled={isScrolled}
         openAuthModal={openAuthModal}
-        theme={theme}
         toggleTheme={toggleTheme}
         config={config}
       />
@@ -1438,7 +1439,7 @@ const YuktiGenesisSite = () => {
                   }`}
                 >
                   <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>{" "}
-                  ACCEPTING NEW PROJECTS FOR 2025
+                  ACCEPTING NEW PROJECTS FOR 2026
                 </div>
               </ScrollFadeIn>
               <ScrollFadeIn delay={0.2}>
@@ -1587,7 +1588,7 @@ const YuktiGenesisSite = () => {
                     index={index}
                     totalSteps={roadmapSteps.length}
                     config={config}
-                  />
+                                   />
                 </ScrollFadeIn>
               ))}
             </div>
@@ -1638,7 +1639,7 @@ const YuktiGenesisSite = () => {
       <FloatingDock activeSection={activeSection} config={config} />
 
       {/* --- Global CSS Styles (Combined & Enhanced) --- */}
-      <style jsx global>{`
+      <style>{`
         /* -------------------------------------------------- */
         /* website.txt CSS (Retained/Adapted) */
         /* -------------------------------------------------- */

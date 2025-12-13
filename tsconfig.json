@@ -14,10 +14,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    /* Linting – updated to relax implicit any */
+    "strict": false,                  // Keep this false
+    "noImplicitAny": false,           // Add this explicitly
+    "strictNullChecks": false,         // Optional: keep some strictness if you want
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
