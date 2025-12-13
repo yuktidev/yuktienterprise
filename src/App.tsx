@@ -1,0 +1,1748 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
+
+// ====================================================================
+// 1. ICON SYSTEMS (Merged & Renamed)
+// (Icons remain unchanged)
+// ====================================================================
+
+// Icons from website.txt (Social/Utility)
+const WhatsAppIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="currentColor" aria-label="WhatsApp">
+    <path d="M12.04 2.007c-5.52 0-10 4.48-10 10 0 1.94 0.57 3.76 1.55 5.32l-1.63 4.68 4.83-1.59c1.52 0.83 3.25 1.28 5.25 1.28 5.52 0 10-4.48 10-10s-4.48-10-10-10zm4.72 13.92c-0.28 0.17-0.78 0.26-1.07 0.3c-0.3 0.03-0.56 0.05-0.84 0.05-0.28 0-0.49-0.03-0.75-0.08-0.26-0.05-0.62-0.16-1.12-0.41-0.62-0.31-1.37-0.95-1.95-1.61-0.62-0.69-1.54-1.28-1.85-0.18-0.31-0.02-0.47 0.14-0.62 0.14-0.14 0.32-0.35 0.47-0.53 0.15-0.19 0.25-0.3 0.34-0.5c0.09-0.2 0.04-0.37-0.02-0.53-0.06-0.16-0.56-1.36-0.76-1.86-0.19-0.5-0.4-0.43-0.7-0.43-0.29 0-0.56 0.05-0.81 0.05s-0.51-0.06-0.77-0.06c-0.26 0-0.67 0.09-1.03 0.41-0.36 0.32-1.37 1.34-1.37 3.27s1.4 3.79 1.6 4.05c0.2 0.26 2.7 4.13 6.55 5.61 3.85 1.48 3.85 0.99 4.54 0.94c0.69-0.05 1.77-0.72 2.02-1.38s0.25-1.25 0.18-1.38c-0.07-0.13-0.28-0.21-0.58-0.36z" />
+  </svg>
+);
+const LinkedInIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="currentColor" aria-label="LinkedIn">
+    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.359-4 0v5.604h-3v-11h3v1.765c1.395-2.586 7-2.777 7 2.476v6.759z" />
+  </svg>
+);
+const MailIcon = (props) => (
+  <svg {...props} viewBox="0 0 24 24" fill="currentColor" aria-label="Email">
+    <path d="M0 3v18h24v-18h-24zm6.623 10.51l-6.623 5.489v-14.593l6.623 9.104zm10.354 0l6.623-9.104v14.593l-6.623-5.489zm-10.977-2.618l-2.008-2.753v-2.071l12.361 9.423 12.361-9.423v2.071l-2.008 2.753 2.008 2.753-12.361 9.423-12.361-9.423 2.008-2.753z" />
+  </svg>
+);
+const TwitterIcon = (props) => (
+  <svg
+    {...props}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-label="X (Twitter)"
+  >
+    <path d="M18.901 1.143h3.812l-7.796 8.783 9.471 14.074h-8.243l-6.223-9.284-7.147 9.284h-3.811l8.286-10.366-9.11-13.491h8.625l5.228 7.79zM17.842 21.054h2.152l-8.498-12.639h-2.31l8.653 12.639z" />
+  </svg>
+);
+const InstagramIcon = (props) => (
+  <svg
+    {...props}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-label="Instagram"
+  >
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07l.534.027c1.376.069 2.06.282 2.655.518.57.227 1.05.54 1.516 1.006.467.466.78 0.946 1.007 1.517.236.594.449 1.279.518 2.655l.027.533c.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85l-.027.534c-.069 1.376-.282 2.06-.518 2.655-.227.57-.54 1.05-1.006 1.516-.466.467-.946.78-1.517 1.007-.594.236-1.279.449-2.655.518l-.533.027c-1.266-.058-1.646-.07-4.85-.07s-3.584.012-4.85.07l-.534.027c-1.376.069-2.06.282-2.655.518-.57.227-1.05.54-1.516 1.006-.467.466-.78.946-1.007 1.517-.236.594-.449 1.279-.518 2.655l-.027.533c-.058 1.266-.07 1.646-.07 4.85s.012 3.584.07 4.85l.027.534c.069 1.376.282 2.06.518 2.655.227.57.54 1.05 1.006 1.516.466.467.946.78 1.517 1.007.594.236 1.279.449 2.655.518l.533.027c1.266.058 1.646.07 4.85.07s3.567-.01 4.793-.067c.783-.039 1.284-.187 1.637-.31.351-.123.62-.29.89-.56.27-.27.538-.437.89-.56.353-.123.854-.271 1.637-.31 1.226-.057 1.615-.067 4.793-.067zm0 2.298c-3.178 0-3.567.01-4.793.067-.783.039-1.284.187-1.637.31-.351.123-.62.29-.89.56-.27.27-.437.538-.56.89-.123.353-.271.854-.31 1.637-.057 1.226-.067 1.615-.067 4.793s.01 3.567.067 4.793c.039.783.187 1.284.31 1.637.123.351.29.62.56.89.27.27.538.437.89.56.353.123.854.271 1.637.31 1.226.057 1.615.067 4.793.067s3.567-.01 4.793-.067c.783-.039 1.284-.187 1.637-.31.351-.123.62-.29.89-.56.27-.27.538-.437.89-.56.353-.123.854-.271 1.637-.31 1.226-.057 1.615-.067 4.793-.067zm0 3.737c-3.41 0-6.195 2.785-6.195 6.195s2.785 6.195 6.195 6.195 6.195-2.785 6.195-6.195-2.785-6.195-6.195-6.195zm0 10.147c-2.18 0-3.952-1.772-3.952-3.952s1.772-3.952 3.952-3.952 3.952 1.772 3.952 3.952-1.772 3.952-3.952 3.952zm5.717-8.29a1.44 1.44 0 0 1-1.442 1.44c-.792 0-1.44-.65-1.44-1.442s.648-1.44 1.44-1.44c.792 0 1.442.65 1.442 1.44z" />
+  </svg>
+);
+
+// Icons for Theme Toggle (NEW)
+const MoonIcon = (props) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+);
+const SunIcon = (props) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="5"></circle>
+    <line x1="12" y1="1" x2="12" y2="3"></line>
+    <line x1="12" y1="21" x2="12" y2="23"></line>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+    <line x1="1" y1="12" x2="3" y2="12"></line>
+    <line x1="21" y1="12" x2="23" y2="12"></line>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  </svg>
+);
+
+// Icons from new theme.txt (Neo Icons - Renamed)
+const NeoIcons = {
+  Terminal: (props) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="4 17 10 11 4 5"></polyline>
+      <line x1="12" y1="19" x2="20" y2="19"></line>
+    </svg>
+  ),
+  Zap: (props) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+    </svg>
+  ),
+  Box: (props) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+      <line x1="12" y1="22.08" x2="12" y2="12"></line>
+    </svg>
+  ),
+  TrendingUp: (props) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+      <polyline points="17 6 23 6 23 12"></polyline>
+    </svg>
+  ),
+  Shield: (props) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+    </svg>
+  ),
+  Menu: (props) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  ),
+  X: (props) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  ),
+  Check: (props) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  ),
+};
+
+// ====================================================================
+// 2. THEME CONFIGURATION HELPER (NEW)
+// ====================================================================
+
+const getThemeConfig = (theme) => {
+  const isDark = theme === "dark";
+  const gridColor = isDark ? "#fff" : "#000";
+  const glow1Color = isDark ? "purple-900/20" : "purple-300/40";
+  const glow2Color = isDark ? "indigo-900/20" : "indigo-300/40";
+
+  return {
+    isDark,
+    textPrimary: isDark ? "text-gray-100" : "text-gray-900",
+    textSecondary: isDark ? "text-gray-400" : "text-gray-600",
+    sectionBg: isDark ? "bg-gray-900/50" : "bg-white/70",
+    cardBg: isDark ? "bg-gray-800/70" : "bg-white/90",
+    borderPrimary: isDark ? "border-gray-700" : "border-gray-200",
+    accentColor: isDark ? "text-indigo-500" : "text-indigo-600",
+    headerBg: isDark
+      ? "bg-[#0a0a0a]/90 backdrop-blur-md"
+      : "bg-white/90 backdrop-blur-md shadow-lg",
+    baseBg: isDark ? "bg-[#0a0a0a]" : "bg-gray-50",
+    footerBg: isDark
+      ? "bg-[#0a0a0a] border-t border-gray-800"
+      : "bg-white/50 border-t border-gray-200", // NEW: Footer BG
+    headerBorder: isDark
+      ? "border-gray-700 shadow-md shadow-indigo-500/10"
+      : "border-gray-200 shadow-lg shadow-indigo-300/40",
+    // Background specific
+    bgGlow1: `bg-${glow1Color}`,
+    bgGlow2: `bg-${glow2Color}`,
+    gridOverlayStyle: {
+      backgroundImage: `linear-gradient(${gridColor} 1px, transparent 1px), linear-gradient(90deg, ${gridColor} 1px, transparent 1px)`,
+      backgroundSize: "50px 50px",
+    },
+    gridOverlayOpacity: isDark ? "opacity-[0.03]" : "opacity-[0.05]",
+  };
+};
+
+// ====================================================================
+// 3. BACKGROUND & NAVIGATION COMPONENTS
+// (ThemedBackground, FloatingDock, TerminalDisplay remain unchanged)
+// ====================================================================
+
+// NEW: Themed Background (Refactored from GlowingBackground)
+const ThemedBackground = ({ theme, config }) => (
+  <div
+    className={`fixed inset-0 z-0 pointer-events-none overflow-hidden transition-colors duration-500 ${config.baseBg}`}
+  >
+    <div
+      className={`absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] ${config.bgGlow1} rounded-full blur-[120px] animate-pulse-slow`}
+    ></div>
+    <div
+      className={`absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] ${config.bgGlow2} rounded-full blur-[100px] animate-pulse-slow delay-1000`}
+    ></div>
+    {/* Grid Overlay */}
+    <div
+      className={`absolute inset-0 ${config.gridOverlayOpacity}`}
+      style={config.gridOverlayStyle}
+    ></div>
+  </div>
+);
+
+// NEW: Floating Dock Navigation (Uses NeoIcons)
+const FloatingDock = ({ activeSection, config }) => {
+  const links = [
+    { id: "home", icon: <NeoIcons.Box className="w-5 h-5" />, label: "Home" },
+    {
+      id: "services",
+      icon: <NeoIcons.Zap className="w-5 h-5" />,
+      label: "Work",
+    },
+    {
+      id: "contact",
+      icon: <NeoIcons.Terminal className="w-5 h-5" />,
+      label: "Book",
+    },
+  ];
+  const dockBg = config.isDark
+    ? "bg-white/10 border-white/10"
+    : "bg-gray-900/10 border-gray-900/10";
+  const linkBase = config.isDark
+    ? "text-gray-400 hover:bg-white/20 hover:text-white"
+    : "text-gray-500 hover:bg-gray-700/20 hover:text-gray-800";
+  const linkActive = config.isDark
+    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/50"
+    : "bg-indigo-600 text-white shadow-lg shadow-indigo-500/50";
+
+  return (
+    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none md:pointer-events-auto">
+      <div
+        className={`hidden md:flex items-center gap-2 px-4 py-3 backdrop-blur-xl rounded-full shadow-2xl transition-colors duration-500 ${dockBg} border`}
+      >
+        {links.map((link) => {
+          const isActive = activeSection === link.id;
+          return (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              className={`p-2 rounded-full transition-all duration-300 flex items-center gap-2 ${
+                isActive ? linkActive : linkBase
+              }`}
+            >
+              {link.icon}
+              {isActive && (
+                <span className="text-sm font-medium pr-1">{link.label}</span>
+              )}
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// NEW: Terminal Display (Hero Visual) - *Kept Dark for Thematic Consistency*
+const TerminalDisplay = () => {
+  const [lines, setLines] = useState([
+    "> Initializing system...",
+    "> Running diagnostics...",
+  ]);
+
+  useEffect(() => {
+    const commands = [
+      "> Optimizing user experience...",
+      "> Compiling assets...",
+      "> 0 errors found.",
+      "> Deployment successful.",
+      "> Fetching coffee ☕...",
+    ];
+    const interval = setInterval(() => {
+      setLines((prevLines) => {
+        const newLines = [...prevLines];
+        if (newLines.length > 5) newLines.shift(); // Keep only last 5 lines
+        newLines.push(commands[Math.floor(Math.random() * commands.length)]);
+        return newLines;
+      });
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="w-full max-w-md mx-auto bg-[#0F0F0F] rounded-xl border border-white/10 shadow-2xl overflow-hidden font-mono text-xs md:text-sm transform hover:scale-[1.02] transition-transform duration-500">
+      <div className="bg-[#1a1a1a] px-4 py-2 flex items-center gap-2 border-b border-white/5">
+        <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+        <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+        <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+        <div className="ml-auto text-gray-500">bash</div>
+      </div>
+      <div className="p-4 space-y-2 h-48 overflow-hidden text-green-400/90">
+        {lines.map((line, i) => (
+          <div key={i} className="animate-typewriter">
+            {line}
+          </div>
+        ))}
+        <div className="animate-pulse">_</div>
+      </div>
+    </div>
+  );
+};
+
+// ====================================================================
+// 4. UTILITY COMPONENTS (website.txt & ENHANCEMENTS)
+// (SectionSpotlight, ScrambledText, ScrollFadeIn, BentoCard, MagneticServiceCard, RoadmapStep, AuthModal, FAQItem, ContactForm remain unchanged)
+// ====================================================================
+
+// NEW: Section Spotlight Wrapper (Enhancement 1)
+const SectionSpotlight = ({ children, className = "", config }) => {
+  const ref = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = useCallback((e) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setPosition({ x, y });
+  }, []);
+
+  // Spotlight color changes with theme
+  const spotlightColor = config.isDark
+    ? "rgba(99, 102, 241, 0.15)"
+    : "rgba(99, 102, 241, 0.3)";
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      className={`relative group overflow-hidden ${className}`}
+    >
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{
+          background: `radial-gradient(400px at ${position.x}px ${position.y}px, ${spotlightColor} 0%, transparent 80%)`,
+        }}
+      />
+      {children}
+    </div>
+  );
+};
+
+// Scramble/Glitch Reveal
+const ScrambledText = ({ text, delay = 0.5, speed = 40, className }) => {
+  const [displayText, setDisplayText] = useState("");
+  const finalString = text;
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;':\",./<>?`~";
+  const frameCount = 10;
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    let queue = finalString.split("").map((char, index) => ({
+      from: char,
+      to: char,
+      start: delay * 1000 + index * speed,
+      end: delay * 1000 + index * speed + frameCount * speed,
+      char: char,
+    }));
+    let interval;
+
+    const updateText = (now) => {
+      let output = "";
+      let hasResolved = true;
+
+      for (let i = 0; i < queue.length; i++) {
+        const item = queue[i];
+        if (now < item.start) {
+          output += " ";
+          hasResolved = false;
+        } else if (now < item.end) {
+          output += characters.charAt(
+            Math.floor(Math.random() * characters.length)
+          );
+          hasResolved = false;
+        } else {
+          output += item.char;
+        }
+      }
+
+      setDisplayText(output);
+      if (hasResolved) {
+        clearInterval(interval);
+      }
+    };
+    timerRef.current = setTimeout(() => {
+      const startTime = performance.now();
+      interval = setInterval(() => {
+        updateText(performance.now() - startTime);
+      }, speed / frameCount);
+    }, delay * 1000);
+    return () => {
+      clearTimeout(timerRef.current);
+      clearInterval(interval);
+    };
+  }, [finalString, delay, speed]);
+
+  return <span className={className}>{displayText}</span>;
+};
+
+// Intersection Observer (Scroll Fade In)
+const ScrollFadeIn = ({ children, delay = 0, once = true }) => {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          if (once) {
+            observer.unobserve(entry.target);
+          }
+        } else if (!once) {
+          setIsVisible(false);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1,
+      }
+    );
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [once]);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-opacity duration-700 transform invisible-pre-scroll ${
+        isVisible ? "visible animate-scroll-fade-in" : ""
+      }`}
+      style={{ animationDelay: `${delay}s` }}
+    >
+      {children}
+    </div>
+  );
+};
+
+// NEW: Bento Grid Card (Enhancement 2)
+const BentoCard = ({ title, icon, technologies, description, config }) => {
+  const bg = config.isDark ? "bg-gray-800/70" : "bg-white/90";
+  const border = config.isDark ? "border-gray-700" : "border-gray-200";
+  const textTitle = config.isDark ? "text-white" : "text-gray-900";
+  const textDesc = config.isDark ? "text-gray-400" : "text-gray-600";
+  const techBg = config.isDark ? "bg-gray-700/80" : "bg-gray-100";
+  const techText = config.isDark ? "text-gray-200" : "text-gray-700";
+
+  return (
+    <div
+      className={`relative p-6 rounded-3xl border ${border} ${bg} shadow-xl transition-all duration-500 hover:shadow-indigo-500/20 group cursor-default h-full flex flex-col justify-between`}
+    >
+      <div>
+        <div
+          className={`text-4xl mb-4 text-indigo-400 group-hover:scale-105 transition-transform ${config.accentColor}`}
+        >
+          {icon}
+        </div>
+        <h3 className={`text-xl font-bold mb-2 ${textTitle}`}>{title}</h3>
+        <p className={`text-sm mb-4 ${textDesc}`}>{description}</p>
+      </div>
+      <div
+        className={`flex flex-wrap gap-2 mt-auto pt-4 border-t ${config.borderPrimary}/50`}
+      >
+        {technologies.slice(0, 4).map((tech) => (
+          <span
+            key={tech}
+            className={`px-3 py-1 ${techBg} ${techText} rounded-lg text-xs font-medium`}
+          >
+            {tech}
+          </span>
+        ))}
+        {technologies.length > 4 && (
+          <span className="px-3 py-1 bg-transparent text-gray-500 rounded-lg text-xs font-medium">
+            + {technologies.length - 4} more
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Magnetic Service Card
+const useMagneticTilt = () => {
+  const cardRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const handleMouseMove = useCallback((e) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const x = (e.clientX - centerX) / (rect.width / 2);
+    const y = (e.clientY - centerY) / (rect.height / 2);
+    const maxTilt = 5;
+    setTilt({
+      x: -y * maxTilt,
+      y: x * maxTilt,
+    });
+  }, []);
+  const handleMouseLeave = useCallback(() => {
+    setTilt({ x: 0, y: 0 });
+  }, []);
+  return { cardRef, tilt, handleMouseMove, handleMouseLeave };
+};
+
+const MagneticServiceCard = ({ s, config }) => {
+  const { cardRef, tilt, handleMouseMove, handleMouseLeave } =
+    useMagneticTilt();
+  const shiftX = tilt.y * 0.6;
+  const shiftY = tilt.x * 0.6;
+  // Aberration style for both themes
+  const aberrationStyle = {
+    textShadow: `${shiftX}px ${shiftY}px 1px rgba(255, 0, 100, 0.5), 
+                 ${-shiftX}px ${-shiftY}px 1px rgba(0, 100, 255, 0.5)`,
+    transition: "text-shadow 0.3s ease-out",
+  };
+  const bg = config.isDark ? "bg-gray-800/70" : "bg-white/90";
+  const border = config.isDark ? "border-gray-700" : "border-gray-200";
+  const textTitle = config.isDark ? "text-gray-100" : "text-gray-900";
+  const textDesc = config.isDark ? "text-gray-400" : "text-gray-600";
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`relative p-6 rounded-3xl border ${border} ${bg} shadow-xl transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/20 group cursor-pointer`}
+      style={{
+        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(1.02)`,
+        transition: "transform 0.3s ease-out",
+      }}
+    >
+      <div className="relative z-10">
+        <div
+          className="text-5xl mb-4 transition-transform duration-300 group-hover:scale-105"
+          style={aberrationStyle}
+        >
+          {s.icon}
+        </div>
+        <h4
+          className={`text-xl font-semibold mb-2 ${textTitle}`}
+          style={aberrationStyle}
+        >
+          {s.title}
+        </h4>
+        <p className={`text-sm ${textDesc}`}>{s.desc}</p>
+      </div>
+    </div>
+  );
+};
+
+// Roadmap Step Component
+const RoadmapStep = ({ step, index, totalSteps, config }) => {
+  const isLast = index === totalSteps - 1;
+  const primaryColorClass = "bg-purple-600/90 text-white shadow-purple-500/50";
+  const connectorClass = "bg-purple-500/50";
+  const cardBg = config.isDark ? "bg-gray-800/60" : "bg-white/60";
+  const cardText = config.isDark ? "text-gray-400" : "text-gray-700";
+  const cardBorder = config.isDark ? "border-gray-700" : "border-gray-200";
+
+  return (
+    <div className="flex w-full max-w-2xl">
+      {/* Timeline Column */}
+      <div className="flex flex-col items-center mr-6">
+        {/* 1. Node */}
+        <div
+          className={`relative z-30 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-500 shadow-xl ${primaryColorClass} transform group-hover:scale-125`}
+        >
+          <span className="text-xl font-extrabold">{index + 1}</span>
+          <div
+            className={` absolute inset-0 rounded-full opacity-60 bg-purple-400 animate-pulse-node ${
+              index === 0 ? "delay-500" : ""
+            }`}
+          ></div>
+        </div>
+        {/* 2. Vertical Connector */}
+        {!isLast && (
+          <div className={`w-0.5 flex-grow ${connectorClass} z-10 my-1`}></div>
+        )}
+      </div>
+
+      {/* Content Column */}
+      <div className="pb-12 pt-1">
+        <div
+          className={`mt-0 h-full relative z-20 p-6 rounded-3xl backdrop-blur-md transition-all duration-500 border ${cardBorder} hover:border-purple-500/50 ${cardBg} shadow-xl hover:shadow-2xl hover:shadow-purple-500/10`}
+        >
+          <h4
+            className={`text-xl font-bold mb-2 text-indigo-400 flex items-center gap-3 ${config.accentColor}`}
+          >
+            {step.icon} {step.title}
+          </h4>
+          <p className={cardText}>{step.desc}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Auth Modal Component
+const AuthModal = ({ formType, setFormType, closeModal, config }) => {
+  const isLogin = formType === "login";
+  const bg = config.isDark ? "bg-gray-900" : "bg-white";
+  const text = config.isDark ? "text-gray-100" : "text-gray-900";
+  const inputBg = config.isDark ? "bg-gray-800" : "bg-gray-100";
+  const inputBorder = config.isDark ? "border-gray-700" : "border-gray-300";
+  const inactiveText = config.isDark
+    ? "text-gray-500 hover:text-gray-300"
+    : "text-gray-400 hover:text-gray-600";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm p-4 transition-opacity duration-300">
+      <div
+        className={`w-full max-w-md p-6 rounded-3xl shadow-2xl ${bg} ${text} transition-all duration-500 transform scale-100 opacity-100 border border-indigo-500/50`}
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-2xl font-bold">
+            {isLogin ? "Sign In" : "Register"}
+          </h3>
+          <button
+            onClick={closeModal}
+            className={`text-xl p-2 rounded-full transition-colors text-indigo-400 ${
+              config.isDark ? "hover:bg-gray-700" : "hover:bg-gray-100"
+            }`}
+          >
+            <NeoIcons.X className="w-6 h-6" />
+          </button>
+        </div>
+        {/* Tab Switcher */}
+        <div className={`flex mb-6 border-b ${config.borderPrimary}`}>
+          <button
+            onClick={() => setFormType("login")}
+            className={`flex-1 py-2 font-semibold transition-colors duration-300 ${
+              isLogin
+                ? "border-b-2 border-indigo-500 text-indigo-500"
+                : inactiveText
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => setFormType("signup")}
+            className={`flex-1 py-2 font-semibold transition-colors duration-300 ${
+              !isLogin
+                ? "border-b-2 border-indigo-500 text-indigo-500"
+                : inactiveText
+            }`}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        {/* Form Content */}
+        <form className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email Address"
+            className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
+          />
+          {!isLogin && (
+            <input
+              type="text"
+              placeholder="Full Name"
+              className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
+            />
+          )}
+          <input
+            type="password"
+            placeholder="Password"
+            className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
+          />
+          <button
+            type="submit"
+            className="w-full py-3 mt-6 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transform hover:scale-[1.01] transition-all duration-300"
+          >
+            {isLogin ? "Login" : "Create Account"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// ====================================================================
+// 5. DATA & HOOKS (website.txt)
+// (Data remains unchanged)
+// ====================================================================
+
+const serviceData = {
+  "Content & Platform Focus": [
+    {
+      title: "Business & Corporate Sites",
+      desc: "Crafting professional platforms to showcase services, build client trust, and drive attraction for your company.",
+      icon: "🏢",
+    },
+    {
+      title: "E-commerce & Retail Solutions",
+      desc: "Developing secure online stores with product management, payment gateways, and feature-rich shopping experiences.",
+      icon: "🛍️",
+    },
+    {
+      title: "Blog & Content Hubs",
+      desc: "Building robust platforms for sharing articles, tutorials, and news with powerful content management and distribution features.",
+      icon: "✍️",
+    },
+    {
+      title: "Portfolio & Creative Showcases",
+      desc: "Designing stunning digital portfolios for artists, photographers, and creatives to display their work effectively and attract opportunities.",
+      icon: "🖼️",
+    },
+    {
+      title: "Educational & Resource Hubs",
+      desc: "Creating information-dense websites for in-depth knowledge, training, and community resources.",
+      icon: "📚",
+    },
+    {
+      title: "High-Conversion Landing Pages",
+      desc: "Designing focused, single-page sites optimized with strong call-to-actions to maximize campaign conversion rates.",
+      icon: "🎯",
+    },
+  ],
+};
+
+const roadmapSteps = [
+  {
+    icon: "💡",
+    title: "Strategy & Planning",
+    desc: "Defining objectives, target audience, technical requirements, and creating a detailed project plan.",
+  },
+  {
+    icon: "🎨",
+    title: "UX/UI Design",
+    desc: "Wireframing, prototyping, and iterating on UX/UI designs to ensure a seamless and engaging user experience.",
+  },
+  {
+    icon: "💻",
+    title: "Development & Integration",
+    desc: "Agile development using modern stacks (AI, Cloud-Native), CI/CD, and seamless integration with third-party services.",
+  },
+  {
+    icon: "🚀",
+    title: "Launch & Optimization",
+    desc: "Zero-downtime deployment, post-launch monitoring, performance tuning, and ongoing iterative improvements.",
+  },
+];
+
+const techData = [
+  {
+    title: "Frontend Development",
+    icon: "⚛️",
+    description:
+      "Modern, reactive interfaces with a focus on speed and user experience.",
+    technologies: [
+      "Next.js (React)",
+      "TypeScript",
+      "Tailwind CSS",
+      "Figma/Design Ops",
+      "Web Performance",
+    ],
+  },
+  {
+    title: "Backend & API",
+    icon: "⚙️",
+    description:
+      "Scalable, secure, and maintainable server-side logic and robust API design.",
+    technologies: [
+      "Node.js (Express)",
+      "Python/ML (Django)",
+      "GoLang (Microservices)",
+      "GraphQL / REST API",
+      "Serverless Functions",
+    ],
+  },
+  {
+    title: "Data & Storage",
+    icon: "💾",
+    description:
+      "Optimized data solutions for both relational and non-relational storage needs.",
+    technologies: [
+      "PostgreSQL (RDBMS)",
+      "MongoDB (NoSQL)",
+      "Redis (Caching)",
+      "Elasticsearch",
+    ],
+  },
+  {
+    title: "Cloud & DevOps",
+    icon: "☁️",
+    description:
+      "Automated, reliable, and observable infrastructure for continuous delivery.",
+    technologies: [
+      "AWS / GCP / Azure",
+      "Kubernetes (K8s)",
+      "Docker",
+      "CI/CD (GitLab/GitHub)",
+      "Microservices",
+    ],
+  },
+];
+
+// Hook for scroll state and active section (Modified for FloatingDock)
+const useScrollState = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const sectionRefs = useRef({});
+
+  useEffect(() => {
+    const sections = ["home", "services", "tech-stack", "contact"];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    sections.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) {
+        observer.observe(element);
+        sectionRefs.current[id] = element;
+      }
+    });
+
+    const handleScroll = () => {
+      const scrollTopThreshold = 50;
+      setIsScrolled(window.scrollY > scrollTopThreshold);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      Object.values(sectionRefs.current).forEach((el) =>
+        observer.unobserve(el)
+      );
+    };
+  }, []);
+
+  return { isScrolled, activeSection };
+};
+
+// ====================================================================
+// 6. MAIN COMPONENTS
+// (Header remains unchanged)
+// ====================================================================
+
+// Header Component (Adapted for Dark/Light Theme)
+const Header = ({ isScrolled, openAuthModal, theme, toggleTheme, config }) => {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const navItems = ["Home", "Services", "Tech Stack", "Contact"];
+
+  const textPrimary = config.textPrimary;
+  const headerBg = isScrolled ? config.headerBg : "bg-transparent";
+  const headerBorder = isScrolled ? config.headerBorder : "border-transparent";
+  const linkText = config.isDark
+    ? "text-gray-400 hover:text-white"
+    : "text-gray-600 hover:text-gray-900";
+  const linkAccent = config.isDark ? "text-gray-400" : "text-gray-500";
+  const toggleIcon = config.isDark ? (
+    <SunIcon className="w-5 h-5" />
+  ) : (
+    <MoonIcon className="w-5 h-5" />
+  );
+  const toggleButtonClass = config.isDark
+    ? "text-white hover:bg-gray-700/50"
+    : "text-gray-800 hover:bg-gray-200/50";
+  const mobileNavBg = config.isDark
+    ? "bg-[#0a0a0a] bg-opacity-95"
+    : "bg-white bg-opacity-95";
+
+  return (
+    <header
+      className={`fixed top-0 left-0 right-0 z-40 p-2 transition-all duration-400 ${headerBg}`}
+    >
+      <div
+        className={`w-full max-w-6xl mx-auto flex items-center justify-between px-4 transition-all duration-500 ${
+          isScrolled
+            ? "rounded-2xl border " + headerBorder
+            : "rounded-none border-transparent"
+        }`}
+      >
+        {/* Logo/Brand */}
+        <div className="flex items-center gap-3 py-2">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center animate-bounce-slow overflow-hidden">
+            <img
+              src="/logo.JPG"
+              alt="Yuktigenesis Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="leading-tight">
+            <div className={`text-lg font-semibold ${textPrimary}`}>
+              {" "}
+              Yukti Genesis{" "}
+            </div>
+            <div className={`text-xs ${linkAccent}`}>
+              {" "}
+              Design • Build • Scale{" "}
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Navigation & Actions */}
+        <nav className="hidden lg:flex items-center space-x-6">
+          {navItems.map((item, i) => (
+            <a
+              key={i}
+              href={`#${item.toLowerCase().replace(" ", "-")}`}
+              className={`font-medium transition-colors ${linkText}`}
+            >
+              {item}
+            </a>
+          ))}
+          <button
+            onClick={() => openAuthModal("login")}
+            className="ml-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
+          >
+            Client Login
+          </button>
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle Theme"
+            className={`p-2 rounded-full transition-colors duration-300 ${toggleButtonClass}`}
+          >
+            {toggleIcon}
+          </button>
+        </nav>
+
+        {/* Mobile Menu Button & Toggle */}
+        <div className="flex items-center lg:hidden gap-2">
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle Theme"
+            className={`p-2 rounded-full transition-colors duration-300 ${toggleButtonClass}`}
+          >
+            {toggleIcon}
+          </button>
+          <button
+            className={`${textPrimary} p-2`}
+            onClick={() => setMobileNavOpen(true)}
+          >
+            <NeoIcons.Menu className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Nav Drawer */}
+      {mobileNavOpen && (
+        <div
+          className={`fixed inset-0 z-50 ${mobileNavBg} backdrop-blur-lg p-6 lg:hidden transition-transform duration-300`}
+        >
+          <div className="flex justify-end">
+            <button
+              className={`${textPrimary} text-3xl`}
+              onClick={() => setMobileNavOpen(false)}
+            >
+              <NeoIcons.X className="w-8 h-8" />
+            </button>
+          </div>
+          <div className="flex flex-col space-y-4 mt-8">
+            {navItems.map((item, i) => (
+              <a
+                key={i}
+                href={`#${item.toLowerCase().replace(" ", "-")}`}
+                onClick={() => setMobileNavOpen(false)}
+                className={`py-3 text-2xl font-medium border-b ${config.borderPrimary} ${textPrimary} hover:text-indigo-400 transition-colors`}
+              >
+                {item}
+              </a>
+            ))}
+            <button
+              onClick={() => {
+                openAuthModal("login");
+                setMobileNavOpen(false);
+              }}
+              className="py-3 bg-indigo-600 text-white rounded-lg text-lg transform hover:scale-[0.99] transition-transform duration-300 mt-4"
+            >
+              Client Login / Signup
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+// ====================================================================
+// Dummy Components for completeness (FAQItem, ContactForm)
+// ====================================================================
+const FAQItem = ({ question, config }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const bg = config.isDark ? "bg-gray-800/70" : "bg-gray-100/70";
+  const hoverBg = config.isDark
+    ? "hover:bg-gray-800/50"
+    : "hover:bg-gray-100/50";
+  const text = config.isDark ? "text-gray-200" : "text-gray-900";
+  const descText = config.isDark ? "text-gray-400" : "text-gray-600";
+  const border = config.isDark ? "border-gray-700" : "border-gray-200";
+
+  return (
+    <div
+      className={`border-b ${border} cursor-pointer transition-colors duration-300 ${
+        isOpen ? bg : hoverBg
+      } rounded-lg p-4`}
+      onClick={() => setIsOpen(!isOpen)}
+    >
+      <div className={`flex justify-between items-center ${text}`}>
+        <p className="font-semibold">{question}</p>
+        <span className="text-indigo-400 transform transition-transform duration-300">
+          {isOpen ? "-" : "+"}
+        </span>
+      </div>
+      {isOpen && (
+        <div className={`mt-2 ${descText} text-sm animate-fadeIn`}>
+          <p>
+            The answer to the question is highly specific to the complexity and
+            scope of your project. We offer a detailed consultation and project
+            breakdown to give you an accurate estimate.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ContactForm = ({ config }) => {
+  const [selectedContactType, setSelectedContactType] = useState("form");
+  const buttonBg = config.isDark ? "bg-gray-800" : "bg-gray-200";
+  const buttonTextInactive = config.isDark
+    ? "text-gray-400 hover:bg-gray-700"
+    : "text-gray-600 hover:bg-gray-300";
+  const formBg = config.isDark ? "bg-gray-800/60" : "bg-white/60";
+  const formBorder = config.isDark ? "border-gray-700" : "border-gray-200";
+  const inputBg = config.isDark ? "bg-gray-700" : "bg-gray-50";
+  const inputText = config.isDark ? "text-white" : "text-gray-900";
+  const inputBorder = config.isDark ? "border-gray-600" : "border-gray-300";
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div
+        className={`flex p-1 ${buttonBg} rounded-full mb-8 max-w-sm mx-auto`}
+      >
+        <button
+          onClick={() => setSelectedContactType("form")}
+          className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${
+            selectedContactType === "form"
+              ? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
+              : buttonTextInactive
+          }`}
+        >
+          Send a Message
+        </button>
+        <button
+          onClick={() => setSelectedContactType("booking")}
+          className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${
+            selectedContactType === "booking"
+              ? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
+              : buttonTextInactive
+          }`}
+        >
+          Book a Call
+        </button>
+      </div>
+      <div className="max-w-3xl mx-auto">
+        {selectedContactType === "form" ? (
+          <form
+            className={`space-y-4 p-8 rounded-2xl shadow-xl border transition-all duration-500 hover:shadow-2xl ${formBg} ${formBorder}`}
+          >
+            <input
+              type="text"
+              placeholder="Your Name"
+              className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
+            />
+            <input
+              type="email"
+              placeholder="Your Email"
+              className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
+            />
+            <textarea
+              placeholder="Tell us about your project..."
+              rows="4"
+              className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
+            ></textarea>
+            <button
+              type="submit"
+              className="w-full py-3 mt-4 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transform hover:scale-[1.01] transition-all duration-300"
+            >
+              Send Message
+            </button>
+          </form>
+        ) : (
+          <div
+            className={`p-8 rounded-2xl border border-indigo-500/50 ${
+              config.isDark
+                ? "bg-gray-800/60 text-white"
+                : "bg-white/60 text-gray-900"
+            } shadow-2xl text-center space-y-4`}
+          >
+            <p className="text-xl font-medium">
+              Schedule a discovery call to kick off your project.
+            </p>
+            <a
+              href="https://calendar.example.com/yukti-genesis-call"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block w-full md:w-auto px-10 py-3 rounded-lg font-semibold text-center bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl shadow-indigo-500/50 transition-all duration-300 transform hover:scale-105 active:scale-[0.98]"
+            >
+              Book Now 🗓️
+            </a>
+            <a
+              href="https://wa.me/91XXXXXXXXXX?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block w-full md:w-auto mt-3 px-5 py-2 rounded-lg font-semibold text-center transition-all duration-300 transform hover:scale-105 active:scale-[0.98] shadow-md bg-green-500 hover:bg-green-600 text-white shadow-green-400/50"
+            >
+              <div className="flex items-center justify-center gap-2">
+                {" "}
+                <WhatsAppIcon className="w-5 h-5" /> WhatsApp Chat{" "}
+              </div>
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Footer (Adapted for Dark/Light Theme)
+const Footer = ({ config }) => {
+  const textSecondary = config.textSecondary;
+  const linkText = config.isDark ? "hover:text-white" : "hover:text-gray-900";
+  const iconColor = config.isDark
+    ? "text-gray-400 hover:text-white"
+    : "text-gray-500 hover:text-gray-900";
+  const textTitle = config.isDark ? "text-white" : "text-gray-900";
+
+  // IMPORTANT FIX: Footer wrapper now uses the explicit footerBg and padding
+  return (
+    <footer
+      className={`w-full p-6 transition-colors duration-500 ${config.footerBg} ${textSecondary}`}
+    >
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div>
+            <h4 className={`text-lg font-semibold mb-4 ${textTitle}`}>
+              Yukti Genesis
+            </h4>
+            <p className="text-sm">
+              Design, Build, and Scale your next digital product with our
+              full-spectrum studio.
+            </p>
+            <div className="flex gap-4 mt-4">
+              <a
+                href="#linkedin"
+                aria-label="LinkedIn"
+                className={`transition-colors ${iconColor}`}
+              >
+                <LinkedInIcon className="w-6 h-6" />
+              </a>
+              <a
+                href="#twitter"
+                aria-label="X (Twitter)"
+                className={`transition-colors ${iconColor}`}
+              >
+                <TwitterIcon className="w-6 h-6" />
+              </a>
+              <a
+                href="#instagram"
+                aria-label="Instagram"
+                className={`transition-colors ${iconColor}`}
+              >
+                <InstagramIcon className="w-6 h-6" />
+              </a>
+              <a
+                href="#mail"
+                aria-label="Email"
+                className={`transition-colors ${iconColor}`}
+              >
+                <MailIcon className="w-6 h-6" />
+              </a>
+              <a
+                href="https://wa.me/91XXXXXXXXXX"
+                aria-label="WhatsApp"
+                className={`transition-colors ${iconColor}`}
+              >
+                <WhatsAppIcon className="w-6 h-6" />
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 className={`text-lg font-semibold mb-4 ${config.accentColor}`}>
+              Services
+            </h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="#services" className={`transition-colors ${linkText}`}>
+                  Custom Web Apps
+                </a>
+              </li>
+              <li>
+                <a href="#services" className={`transition-colors ${linkText}`}>
+                  E-Commerce & SAAS
+                </a>
+              </li>
+              <li>
+                <a href="#services" className={`transition-colors ${linkText}`}>
+                  API Development
+                </a>
+              </li>
+            </ul>
+          </div>
+          {/* Placeholder Column 1 */}
+          <div>
+            <h4 className={`text-lg font-semibold mb-4 ${config.accentColor}`}>
+              Company
+            </h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="#about" className={`transition-colors ${linkText}`}>
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="#blog" className={`transition-colors ${linkText}`}>
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a href="#careers" className={`transition-colors ${linkText}`}>
+                  Careers
+                </a>
+              </li>
+            </ul>
+          </div>
+          {/* Placeholder Column 2 */}
+          <div>
+            <h4 className={`text-lg font-semibold mb-4 ${config.accentColor}`}>
+              Legal
+            </h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="#terms" className={`transition-colors ${linkText}`}>
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a href="#privacy" className={`transition-colors ${linkText}`}>
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#sitemap" className={`transition-colors ${linkText}`}>
+                  Sitemap
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          className={`mt-8 pt-4 border-t ${
+            config.borderPrimary
+          } text-center text-xs ${
+            config.isDark ? "text-white opacity-80" : "text-gray-800 opacity-80"
+          }`}
+        >
+          © 2026 Yukti Genesis. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// ====================================================================
+// 7. APP COMPONENT (Merged Structure)
+// ====================================================================
+
+const YuktiGenesisSite = () => {
+  const [theme, setTheme] = useState("dark"); // Start with dark theme
+  const { isScrolled, activeSection } = useScrollState();
+  const [isAuthModalOpen, setIsAuthModal] = useState(false);
+  const [authFormType, setAuthFormType] = useState("login");
+  const config = getThemeConfig(theme);
+
+  const toggleTheme = () =>
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+
+  const openAuthModal = (type) => {
+    setAuthFormType(type);
+    setIsAuthModal(true);
+  };
+  const closeModal = () => setIsAuthModal(false);
+
+  // Common Themed Classes
+  const textPrimary = config.textPrimary;
+  const textSecondary = config.textSecondary;
+  const sectionBg = config.sectionBg;
+  const borderPrimary = config.borderPrimary;
+
+  return (
+    <div
+      className={`min-h-screen ${textPrimary} overflow-x-hidden relative transition-colors duration-500`}
+    >
+      {/* NEW: Global Themed Background (Z-0) */}
+      <ThemedBackground theme={theme} config={config} />
+
+      {/* Auth Modal (Z-50) */}
+      {isAuthModalOpen && (
+        <AuthModal
+          formType={authFormType}
+          setFormType={setAuthFormType}
+          closeModal={closeModal}
+          config={config}
+        />
+      )}
+
+      {/* Header (Z-40) */}
+      <Header
+        isScrolled={isScrolled}
+        openAuthModal={openAuthModal}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        config={config}
+      />
+
+      <main className="relative z-10 pt-24 pb-16">
+        {" "}
+        {/* Increased bottom padding */}
+        {/* Hero Section */}
+        <section
+          id="home"
+          className={`max-w-6xl mx-auto p-6 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 ${sectionBg} border ${borderPrimary} mt-20`}
+        >
+          <div className="relative z-[3] grid grid-cols-1 md:grid-cols-2 gap-10 items-center min-h-[500px]">
+            {/* TEXT: New Hero Text from new theme.txt */}
+            <div className="space-y-6">
+              <ScrollFadeIn delay={0.1}>
+                <div
+                  className={`inline-flex items-center gap-2 text-sm text-indigo-400 font-semibold tracking-wide animate-fadeIn px-3 py-1 rounded-full border transition-colors duration-500 ${
+                    config.isDark
+                      ? "bg-indigo-900/50 border-indigo-700/50"
+                      : "bg-indigo-100/50 border-indigo-300/50"
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>{" "}
+                  ACCEPTING NEW PROJECTS FOR 2025
+                </div>
+              </ScrollFadeIn>
+              <ScrollFadeIn delay={0.2}>
+                <h1 className="text-5xl md:text-6xl font-extrabold leading-[1.1] tracking-tight">
+                  We turn{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+                    Chaos
+                  </span>
+                  <br /> into{" "}
+                  <ScrambledText
+                    text="Code."
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400"
+                    delay={1.5}
+                  />
+                </h1>
+              </ScrollFadeIn>
+              <ScrollFadeIn delay={0.3}>
+                <p
+                  className={`text-lg max-w-lg leading-relaxed ${textSecondary}`}
+                >
+                  Yukti Genesis is a digital product studio. We don't just build
+                  websites; we engineer revenue-generating assets for startups
+                  and visionaries.
+                </p>
+              </ScrollFadeIn>
+              <ScrollFadeIn delay={0.4}>
+                <div className="flex flex-wrap gap-4 pt-4">
+                  <a
+                    href="#contact"
+                    className="px-8 py-4 bg-indigo-600 text-white font-bold rounded-full hover:scale-105 active:scale-95 transition-all shadow-lg shadow-indigo-500/50"
+                  >
+                    Start Project
+                  </a>
+                  <a
+                    href="#services"
+                    className={`px-8 py-4 bg-transparent border-2 font-bold rounded-full transition-all flex items-center gap-2 ${
+                      config.isDark
+                        ? "border-white/20 text-white hover:bg-white/5"
+                        : "border-gray-300 text-gray-800 hover:bg-gray-100"
+                    }`}
+                  >
+                    View Work
+                  </a>
+                </div>
+              </ScrollFadeIn>
+            </div>
+
+            {/* VISUAL: Terminal Display (Kept dark) */}
+            <div className="flex items-center justify-center relative w-full h-96 sm:h-80 md:h-full z-[3]">
+              <TerminalDisplay />
+            </div>
+          </div>
+        </section>
+        {/* Services Section */}
+        <SectionSpotlight
+          className={`max-w-6xl mx-auto p-6 ${sectionBg} rounded-3xl shadow-2xl transition-colors duration-500 mt-10 border ${borderPrimary}`}
+          config={config}
+        >
+          <section id="services" className="relative z-10">
+            <ScrollFadeIn>
+              <h2
+                className={`text-3xl sm:text-4xl font-bold mb-4 text-center ${textPrimary}`}
+              >
+                Platforms We <span className="text-indigo-500">Engineer</span>
+              </h2>
+              <p className={`text-center mb-10 text-lg ${textSecondary}`}>
+                Targeted development across various content, commerce, and
+                informational platform types.
+              </p>
+            </ScrollFadeIn>
+            <div className="space-y-12">
+              {Object.entries(serviceData).map(([category, items], idx) => (
+                <ScrollFadeIn key={idx} delay={idx * 0.1}>
+                  <div className="mb-6">
+                    <h3
+                      className={`text-2xl font-semibold mb-6 border-l-4 border-indigo-500 pl-4 ${textPrimary}`}
+                    >
+                      {category}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      {items.map((s, i) => (
+                        <MagneticServiceCard key={i} s={s} config={config} />
+                      ))}
+                    </div>
+                  </div>
+                </ScrollFadeIn>
+              ))}
+            </div>
+          </section>
+        </SectionSpotlight>
+        {/* Tech Stack Section (Using Bento Grid) */}
+        <SectionSpotlight
+          className={`max-w-6xl mx-auto p-6 ${sectionBg} rounded-3xl shadow-2xl transition-colors duration-500 mt-10 border ${borderPrimary}`}
+          config={config}
+        >
+          <section id="tech-stack" className="relative z-10">
+            <ScrollFadeIn>
+              <div className="max-w-4xl mx-auto text-center">
+                <h2 className={`text-4xl font-extrabold mb-4 ${textPrimary}`}>
+                  The <span className="text-indigo-500"> Full-Spectrum </span>{" "}
+                  Stack
+                </h2>
+                <p className={`opacity-80 text-lg ${textSecondary}`}>
+                  A modern, robust stack covering Frontend, Backend, Database,
+                  and DevOps—built for performance and intelligent scaling.
+                </p>
+              </div>
+            </ScrollFadeIn>
+
+            {/* Bento Grid for Tech Stack */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+              {techData.map((data, i) => (
+                <ScrollFadeIn key={i} delay={i * 0.1}>
+                  <BentoCard {...data} config={config} />
+                </ScrollFadeIn>
+              ))}
+            </div>
+          </section>
+        </SectionSpotlight>
+        {/* Success Roadmap Section */}
+        <SectionSpotlight
+          className={`max-w-6xl mx-auto p-6 rounded-2xl shadow-xl transition-colors duration-500 mt-10 relative overflow-hidden ${
+            config.isDark ? "bg-gray-800/80" : "bg-gray-100/80"
+          } border ${borderPrimary}`}
+          config={config}
+        >
+          <section id="roadmap" className="relative z-10">
+            <ScrollFadeIn>
+              <div className="text-center mb-12">
+                <h2 className={`text-3xl font-extrabold mb-4 ${textPrimary}`}>
+                  Our <span className="text-indigo-500">4-Step</span> Success
+                  Roadmap
+                </h2>
+                <p className={`text-lg ${textSecondary}`}>
+                  A transparent, collaborative process designed for predictable
+                  results.
+                </p>
+              </div>
+            </ScrollFadeIn>
+
+            <div className="relative flex flex-col items-center">
+              {roadmapSteps.map((step, index) => (
+                <ScrollFadeIn key={index} delay={index * 0.2}>
+                  <RoadmapStep
+                    step={step}
+                    index={index}
+                    totalSteps={roadmapSteps.length}
+                    config={config}
+                  />
+                </ScrollFadeIn>
+              ))}
+            </div>
+          </section>
+        </SectionSpotlight>
+        {/* Contact Section */}
+        <section
+          id="contact"
+          className={`max-w-6xl mx-auto p-6 ${sectionBg} rounded-3xl shadow-2xl transition-colors duration-500 mt-10 border ${borderPrimary}`}
+        >
+          <ScrollFadeIn>
+            <div className="text-center mb-12">
+              <h2 className={`text-3xl font-extrabold mb-4 ${textPrimary}`}>
+                Ready to Start Your Project?
+              </h2>
+              <p className={`text-lg ${textSecondary}`}>
+                Let's discuss your vision. Choose your preferred contact method
+                below.
+              </p>
+            </div>
+
+            <ContactForm config={config} />
+          </ScrollFadeIn>
+        </section>
+        {/* FAQ Section */}
+        <section
+          className={`max-w-6xl mx-auto p-6 ${sectionBg} rounded-2xl shadow transition-colors duration-500 mt-6 border ${borderPrimary}`}
+        >
+          <ScrollFadeIn>
+            <h2 className={`text-2xl font-bold mb-4 ${textPrimary}`}>FAQs</h2>
+            <div className="space-y-2">
+              {[
+                "What is your delivery timeline?",
+                "How do you price projects?",
+                "Do you offer maintenance?",
+              ].map((q, i) => (
+                <FAQItem key={i} question={q} config={config} />
+              ))}
+            </div>
+          </ScrollFadeIn>
+        </section>
+      </main>
+
+      {/* Footer (Now outside of main to ensure full width) */}
+      <Footer config={config} />
+
+      {/* NEW: Floating Dock Navigation (Z-50) */}
+      <FloatingDock activeSection={activeSection} config={config} />
+
+      {/* --- Global CSS Styles (Combined & Enhanced) --- */}
+      <style jsx global>{`
+        /* -------------------------------------------------- */
+        /* website.txt CSS (Retained/Adapted) */
+        /* -------------------------------------------------- */
+        @keyframes bounce-slow {
+          0%,
+          100% {
+            transform: translateY(-5%);
+          }
+          50% {
+            transform: translateY(5%);
+          }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 5s ease-in-out infinite;
+        }
+
+        @keyframes scroll-fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-scroll-fade-in {
+          animation: scroll-fade-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+            forwards;
+        }
+        .visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .invisible-pre-scroll {
+          opacity: 0;
+        }
+
+        /* Roadmap Animations - Note: Color is hardcoded purple for thematic consistency */
+        @keyframes pulse-node {
+          0%,
+          100% {
+            box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4);
+            opacity: 1;
+          }
+          70% {
+            box-shadow: 0 0 0 10px rgba(167, 139, 250, 0);
+            opacity: 0.8;
+          }
+        }
+        .animate-pulse-node {
+          animation: pulse-node 2s ease-in-out infinite;
+        }
+
+        /* -------------------------------------------------- */
+        /* new theme.txt CSS (Retained/Adapted) */
+        /* -------------------------------------------------- */
+        @keyframes pulse-slow {
+          0%,
+          100% {
+            opacity: 0.5;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.1);
+          }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 8s infinite ease-in-out;
+        }
+
+        @keyframes typewriter {
+          from {
+            width: 0;
+          }
+          to {
+            width: 100%;
+          }
+        }
+        .animate-typewriter {
+          overflow: hidden;
+          white-space: nowrap;
+          animation: typewriter 0.5s steps(30, end);
+        }
+
+        /* ENHANCEMENT 3: Header Border Light (Color adjusted for theme) */
+        @keyframes border-pulse {
+          0% {
+            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2);
+          }
+          50% {
+            box-shadow: 0 0 10px 0 rgba(99, 102, 241, 0.6);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2);
+          }
+        }
+        .animate-border-pulse {
+          animation: border-pulse 3s infinite ease-in-out;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default YuktiGenesisSite;
