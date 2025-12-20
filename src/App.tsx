@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import BrochurePromotion from "./components/BrochurePromotion";
 
 // ====================================================================
 // 1. ICON SYSTEMS (Merged & Renamed)
@@ -1394,6 +1395,7 @@ const YuktiGenesisSite = () => {
   const [isAuthModalOpen, setIsAuthModal] = useState(false);
   const [authFormType, setAuthFormType] = useState("login");
   const config = getThemeConfig(theme);
+  const [showBrochure, setShowBrochure] = useState(true);
 
   const toggleTheme = () =>
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
@@ -1650,6 +1652,29 @@ const YuktiGenesisSite = () => {
 
       {/* Footer (Now outside of main to ensure full width) */}
       <Footer config={config} />
+
+      {showBrochure && (
+        <BrochurePromotion
+          imageSrc="/promo/brochure.jpeg"
+          width={280}
+          height={380}
+          top={120}
+          left={20}
+          onClose={() => setShowBrochure(false)}
+        />
+      )}
+
+      {/* {showBrochure && (
+        <BrochurePromotion
+          imageSrc="/promo/brochure.jpeg"
+          width={280}
+          height={380}
+          top={220}
+          left={950}
+          onClose={() => setShowBrochure(false)}
+        />
+      )} */}
+
 
       {/* NEW: Floating Dock Navigation (Z-50) */}
       <FloatingDock activeSection={activeSection} config={config} />
