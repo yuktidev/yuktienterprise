@@ -1223,10 +1223,10 @@ const ContactForm = ({ config }) => {
               Book Now 🗓️
             </a>
             <a
-              href="https://wa.me/91XXXXXXXXXX?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services."
+              href="https://wa.me/8886070408?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services."
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block w-full md:w-auto mt-3 px-5 py-2 rounded-lg font-semibold text-center transition-all duration-300 transform hover:scale-105 active:scale-[0.98] shadow-md bg-green-500 hover:bg-green-600 text-white shadow-green-400/50"
+              className="inline-block w-full md:w-auto mt-4 ml-4 px-10 py-3 rounded-lg font-semibold text-center bg-green-500 text-white shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-[0.98] shadow-md hover:bg-green-600 text-white shadow-green-400/50"
             >
               <div className="flex items-center justify-center gap-2">
                 {" "}
@@ -1294,7 +1294,7 @@ const Footer = ({ config }) => {
                 <MailIcon className="w-6 h-6" />
               </a>
               <a
-                href="https://wa.me/91XXXXXXXXXX"
+                href="https://wa.me/8886070408"
                 aria-label="WhatsApp"
                 className={`transition-colors ${iconColor}`}
               >
@@ -1374,7 +1374,7 @@ const Footer = ({ config }) => {
         <div
           className={`mt-8 pt-4 border-t ${
             config.borderPrimary
-          } text-center text-xs ${
+          } text-left text-xs ${
             config.isDark ? "text-white opacity-80" : "text-gray-800 opacity-80"
           }`}
         >
