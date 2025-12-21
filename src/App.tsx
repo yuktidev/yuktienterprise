@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import BrochurePromotion from "./components/BrochurePromotion";
 
 // ====================================================================
 // 1. ICON SYSTEMS (Merged & Renamed)
@@ -21,16 +22,16 @@ const MailIcon = (props) => (
     <path d="M0 3v18h24v-18h-24zm6.623 10.51l-6.623 5.489v-14.593l6.623 9.104zm10.354 0l6.623-9.104v14.593l-6.623-5.489zm-10.977-2.618l-2.008-2.753v-2.071l12.361 9.423 12.361-9.423v2.071l-2.008 2.753 2.008 2.753-12.361 9.423-12.361-9.423 2.008-2.753z" />
   </svg>
 );
-const TwitterIcon = (props) => (
-  <svg
-    {...props}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    aria-label="X (Twitter)"
-  >
-    <path d="M18.901 1.143h3.812l-7.796 8.783 9.471 14.074h-8.243l-6.223-9.284-7.147 9.284h-3.811l8.286-10.366-9.11-13.491h8.625l5.228 7.79zM17.842 21.054h2.152l-8.498-12.639h-2.31l8.653 12.639z" />
-  </svg>
-);
+// const TwitterIcon = (props) => (
+//   <svg
+//     {...props}
+//     viewBox="0 0 24 24"
+//     fill="currentColor"
+//     aria-label="X (Twitter)"
+//   >
+//     <path d="M18.901 1.143h3.812l-7.796 8.783 9.471 14.074h-8.243l-6.223-9.284-7.147 9.284h-3.811l8.286-10.366-9.11-13.491h8.625l5.228 7.79zM17.842 21.054h2.152l-8.498-12.639h-2.31l8.653 12.639z" />
+//   </svg>
+// );
 const InstagramIcon = (props) => (
   <svg
     {...props}
@@ -268,7 +269,7 @@ const getThemeConfig = (theme) => {
 // ====================================================================
 
 // NEW: Themed Background (Refactored from GlowingBackground)
-const ThemedBackground = ({ theme, config }) => (
+const ThemedBackground = ({ config }) => (
   <div
     className={`fixed inset-0 z-0 pointer-events-none overflow-hidden transition-colors duration-500 ${config.baseBg}`}
   >
@@ -391,14 +392,14 @@ const TerminalDisplay = () => {
 
 // NEW: Section Spotlight Wrapper (Enhancement 1)
 const SectionSpotlight = ({ children, className = "", config }) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = useCallback((e) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    // const centerX = rect.left + rect.width / 2;
+    // const centerY = rect.top + rect.height / 2;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     setPosition({ x, y });
@@ -433,7 +434,7 @@ const ScrambledText = ({ text, delay = 0.5, speed = 40, className }) => {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;':\",./<>?`~";
   const frameCount = 10;
-  const timerRef = useRef(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     let queue = finalString.split("").map((char, index) => ({
@@ -476,7 +477,9 @@ const ScrambledText = ({ text, delay = 0.5, speed = 40, className }) => {
       }, speed / frameCount);
     }, delay * 1000);
     return () => {
-      clearTimeout(timerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
       clearInterval(interval);
     };
   }, [finalString, delay, speed]);
@@ -484,8 +487,13 @@ const ScrambledText = ({ text, delay = 0.5, speed = 40, className }) => {
   return <span className={className}>{displayText}</span>;
 };
 
-// Intersection Observer (Scroll Fade In)
-const ScrollFadeIn = ({ children, delay = 0, once = true }) => {
+type ScrollFadeInProps = {
+  children: React.ReactNode;
+  delay?: number;
+  once?: boolean;
+};
+
+const ScrollFadeIn = ({ children, delay = 0, once = true }: ScrollFadeInProps) => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -575,7 +583,7 @@ const BentoCard = ({ title, icon, technologies, description, config }) => {
 
 // Magnetic Service Card
 const useMagneticTilt = () => {
-  const cardRef = useRef(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const handleMouseMove = useCallback((e) => {
     const card = cardRef.current;
@@ -597,7 +605,12 @@ const useMagneticTilt = () => {
   return { cardRef, tilt, handleMouseMove, handleMouseLeave };
 };
 
-const MagneticServiceCard = ({ s, config }) => {
+type MagneticServiceCardProps = {
+  s: any;
+  config: any;
+};
+
+const MagneticServiceCard = ({ s, config }: MagneticServiceCardProps) => {
   const { cardRef, tilt, handleMouseMove, handleMouseLeave } =
     useMagneticTilt();
   const shiftX = tilt.y * 0.6;
@@ -895,7 +908,7 @@ const techData = [
 const useScrollState = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const sectionRefs = useRef({});
+  const sectionRefs = useRef<Record<string, HTMLElement>>({});
 
   useEffect(() => {
     const sections = ["home", "services", "tech-stack", "contact"];
@@ -941,7 +954,7 @@ const useScrollState = () => {
 // ====================================================================
 
 // Header Component (Adapted for Dark/Light Theme)
-const Header = ({ isScrolled, openAuthModal, theme, toggleTheme, config }) => {
+const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const navItems = ["Home", "Services", "Tech Stack", "Contact"];
 
@@ -991,7 +1004,7 @@ const Header = ({ isScrolled, openAuthModal, theme, toggleTheme, config }) => {
             </div>
             <div className={`text-xs ${linkAccent}`}>
               {" "}
-              Design • Build • Scale{" "}
+              Intelligence Engineered{" "}
             </div>
           </div>
         </div>
@@ -1083,7 +1096,13 @@ const Header = ({ isScrolled, openAuthModal, theme, toggleTheme, config }) => {
 // ====================================================================
 // Dummy Components for completeness (FAQItem, ContactForm)
 // ====================================================================
-const FAQItem = ({ question, config }) => {
+
+type FAQItemProps = {
+  question: string;
+  config: any;
+};
+
+const FAQItem = ({ question, config }: FAQItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const bg = config.isDark ? "bg-gray-800/70" : "bg-gray-100/70";
   const hoverBg = config.isDark
@@ -1174,7 +1193,7 @@ const ContactForm = ({ config }) => {
             />
             <textarea
               placeholder="Tell us about your project..."
-              rows="4"
+              rows={4}
               className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
             ></textarea>
             <button
@@ -1204,10 +1223,10 @@ const ContactForm = ({ config }) => {
               Book Now 🗓️
             </a>
             <a
-              href="https://wa.me/91XXXXXXXXXX?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services."
+              href="https://wa.me/8886070408?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services."
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block w-full md:w-auto mt-3 px-5 py-2 rounded-lg font-semibold text-center transition-all duration-300 transform hover:scale-105 active:scale-[0.98] shadow-md bg-green-500 hover:bg-green-600 text-white shadow-green-400/50"
+              className="inline-block w-full md:w-auto mt-4 ml-4 px-10 py-3 rounded-lg font-semibold text-center bg-green-500 text-white shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-[0.98] shadow-md hover:bg-green-600 text-white shadow-green-400/50"
             >
               <div className="flex items-center justify-center gap-2">
                 {" "}
@@ -1224,142 +1243,190 @@ const ContactForm = ({ config }) => {
 // Footer (Adapted for Dark/Light Theme)
 const Footer = ({ config }) => {
   const textSecondary = config.textSecondary;
-  const linkText = config.isDark ? "hover:text-white" : "hover:text-gray-900";
-  const iconColor = config.isDark
-    ? "text-gray-400 hover:text-white"
-    : "text-gray-500 hover:text-gray-900";
+  // const linkText = config.isDark ? "hover:text-white" : "hover:text-gray-900";
+  // const iconColor = config.isDark
+  //   ? "text-gray-400 hover:text-white"
+  //   : "text-gray-500 hover:text-gray-900";
   const textTitle = config.isDark ? "text-white" : "text-gray-900";
 
   // IMPORTANT FIX: Footer wrapper now uses the explicit footerBg and padding
   return (
     <footer
-      className={`w-full p-6 transition-colors duration-500 ${config.footerBg} ${textSecondary}`}
+      className={`relative transition-colors duration-500 ${config.footerBg}`}
     >
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div>
-            <h4 className={`text-lg font-semibold mb-4 ${textTitle}`}>
-              Yukti Genesis
-            </h4>
-            <p className="text-sm">
-              Design, Build, and Scale your next digital product with our
-              full-spectrum studio.
-            </p>
-            <div className="flex gap-4 mt-4">
-              <a
-                href="#linkedin"
-                aria-label="LinkedIn"
-                className={`transition-colors ${iconColor}`}
-              >
-                <LinkedInIcon className="w-6 h-6" />
-              </a>
-              <a
-                href="#twitter"
-                aria-label="X (Twitter)"
-                className={`transition-colors ${iconColor}`}
-              >
-                <TwitterIcon className="w-6 h-6" />
-              </a>
-              <a
-                href="#instagram"
-                aria-label="Instagram"
-                className={`transition-colors ${iconColor}`}
-              >
-                <InstagramIcon className="w-6 h-6" />
-              </a>
-              <a
-                href="#mail"
-                aria-label="Email"
-                className={`transition-colors ${iconColor}`}
-              >
-                <MailIcon className="w-6 h-6" />
-              </a>
-              <a
-                href="https://wa.me/91XXXXXXXXXX"
-                aria-label="WhatsApp"
-                className={`transition-colors ${iconColor}`}
-              >
-                <WhatsAppIcon className="w-6 h-6" />
-              </a>
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        {/* MAIN GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10 items-start">
+          
+          {/* LEFT: Illustration */}
+          <div className="flex justify-center md:justify-start">
+            <img
+              src="/footer/communication.png"
+              alt="Human communication illustration"
+              className="
+                w-52
+                opacity-90
+                transition-transform duration-500
+                hover:scale-105
+                animate-fadeIn
+              "
+            />
+          </div>
+
+          {/* RIGHT: CONTENT COLUMNS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 animate-slideUp">
+            
+            {/* COLUMN 1: BRAND */}
+            <div className="space-y-4">
+              <h3 className={`text-2xl font-extrabold ${textTitle}`}>
+                Yukti Genesis
+              </h3>
+
+              <p className={`text-sm leading-relaxed ${textSecondary}`}>
+                A digital product studio crafting scalable, human-centric
+                solutions using modern technology.
+              </p>
+
+              {/* Social Icons */}
+              <div className="flex items-center gap-4 pt-2">
+                {[
+                  {
+                    href: "https://www.linkedin.com/in/yukti-genesis-062507393",
+                    label: "LinkedIn",
+                    icon: <LinkedInIcon className="w-5 h-5" />,
+                  },
+                  {
+                    href: "https://www.instagram.com/yuktigenesis",
+                    label: "Instagram",
+                    icon: <InstagramIcon className="w-5 h-5" />,
+                  },
+                  {
+                    href: "mailto:yuktideveloper@gmail.com?subject=Request%20a%20call&body=Hello%2CYuktian",
+                    label: "Email",
+                    icon: <MailIcon className="w-5 h-5" />,
+                  },
+                  {
+                    href: "https://wa.me/8886070408?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services.",
+                    label: "WhatsApp",
+                    icon: <WhatsAppIcon className="w-5 h-5" />,
+                  },
+                ].map((item, i) => (
+                  <a
+                    key={i}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.label}
+                    className={`
+                      p-2 rounded-full transition-all duration-300
+                      ${config.isDark
+                        ? "text-gray-400 hover:text-white hover:bg-white/10"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"}
+                      hover:scale-110
+                    `}
+                  >
+                    {item.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* COLUMN 2: SERVICES */}
+            <div>
+              <h4 className={`text-sm font-semibold mb-4 ${config.accentColor}`}>
+                Services
+              </h4>
+              <ul className="space-y-3 text-sm">
+                {[
+                  "Custom Web Apps",
+                  "E-Commerce & SaaS",
+                  "API Development",
+                ].map((item, i) => (
+                  <li key={i}>
+                    <a
+                      href="#services"
+                      className={`
+                        relative inline-block transition-colors duration-300
+                        ${textSecondary}
+                        hover:text-indigo-500
+                        after:absolute after:left-0 after:-bottom-1
+                        after:h-[2px] after:w-0 after:bg-indigo-500
+                        after:transition-all after:duration-300
+                        hover:after:w-full
+                      `}
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* COLUMN 3: COMPANY */}
+            <div>
+              <h4 className={`text-sm font-semibold mb-4 ${config.accentColor}`}>
+                Company
+              </h4>
+              <ul className="space-y-3 text-sm">
+                {["About Us", "Blog", "Careers"].map((item, i) => (
+                  <li key={i}>
+                    <a
+                      href="#"
+                      className={`
+                        relative inline-block transition-colors duration-300
+                        ${textSecondary}
+                        hover:text-indigo-500
+                        after:absolute after:left-0 after:-bottom-1
+                        after:h-[2px] after:w-0 after:bg-indigo-500
+                        after:transition-all after:duration-300
+                        hover:after:w-full
+                      `}
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* COLUMN 4: LEGAL */}
+            <div>
+              <h4 className={`text-sm font-semibold mb-4 ${config.accentColor}`}>
+                Legal
+              </h4>
+              <ul className="space-y-3 text-sm">
+                {["Terms of Service", "Privacy Policy", "Sitemap"].map(
+                  (item, i) => (
+                    <li key={i}>
+                      <a
+                        href="#"
+                        className={`
+                          relative inline-block transition-colors duration-300
+                          ${textSecondary}
+                          hover:text-indigo-500
+                          after:absolute after:left-0 after:-bottom-1
+                          after:h-[2px] after:w-0 after:bg-indigo-500
+                          after:transition-all after:duration-300
+                          hover:after:w-full
+                        `}
+                        >
+                        {item}
+                      </a>
+                    </li>
+                  )
+                )}
+              </ul>
             </div>
           </div>
-          <div>
-            <h4 className={`text-lg font-semibold mb-4 ${config.accentColor}`}>
-              Services
-            </h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#services" className={`transition-colors ${linkText}`}>
-                  Custom Web Apps
-                </a>
-              </li>
-              <li>
-                <a href="#services" className={`transition-colors ${linkText}`}>
-                  E-Commerce & SAAS
-                </a>
-              </li>
-              <li>
-                <a href="#services" className={`transition-colors ${linkText}`}>
-                  API Development
-                </a>
-              </li>
-            </ul>
-          </div>
-          {/* Placeholder Column 1 */}
-          <div>
-            <h4 className={`text-lg font-semibold mb-4 ${config.accentColor}`}>
-              Company
-            </h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#about" className={`transition-colors ${linkText}`}>
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#blog" className={`transition-colors ${linkText}`}>
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#careers" className={`transition-colors ${linkText}`}>
-                  Careers
-                </a>
-              </li>
-            </ul>
-          </div>
-          {/* Placeholder Column 2 */}
-          <div>
-            <h4 className={`text-lg font-semibold mb-4 ${config.accentColor}`}>
-              Legal
-            </h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#terms" className={`transition-colors ${linkText}`}>
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="#privacy" className={`transition-colors ${linkText}`}>
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#sitemap" className={`transition-colors ${linkText}`}>
-                  Sitemap
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
+
+        {/* BOTTOM LINE (UNCHANGED AS REQUESTED) */}
         <div
-          className={`mt-8 pt-4 border-t ${
-            config.borderPrimary
-          } text-center text-xs ${
-            config.isDark ? "text-white opacity-80" : "text-gray-800 opacity-80"
-          }`}
+          className={`mt-10 pt-4 border-t ${config.borderPrimary}
+          flex flex-col md:flex-row justify-between gap-3 text-xs ${textSecondary}`}
         >
-          © 2026 Yukti Genesis. All rights reserved.
+          <span>© 2026 Yukti Genesis</span>
+          <span>Design • Build • Scale</span>
         </div>
       </div>
     </footer>
@@ -1376,6 +1443,7 @@ const YuktiGenesisSite = () => {
   const [isAuthModalOpen, setIsAuthModal] = useState(false);
   const [authFormType, setAuthFormType] = useState("login");
   const config = getThemeConfig(theme);
+  const [showBrochure, setShowBrochure] = useState(false);
 
   const toggleTheme = () =>
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
@@ -1397,7 +1465,7 @@ const YuktiGenesisSite = () => {
       className={`min-h-screen ${textPrimary} overflow-x-hidden relative transition-colors duration-500`}
     >
       {/* NEW: Global Themed Background (Z-0) */}
-      <ThemedBackground theme={theme} config={config} />
+      <ThemedBackground config={config} />
 
       {/* Auth Modal (Z-50) */}
       {isAuthModalOpen && (
@@ -1413,7 +1481,6 @@ const YuktiGenesisSite = () => {
       <Header
         isScrolled={isScrolled}
         openAuthModal={openAuthModal}
-        theme={theme}
         toggleTheme={toggleTheme}
         config={config}
       />
@@ -1438,7 +1505,7 @@ const YuktiGenesisSite = () => {
                   }`}
                 >
                   <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>{" "}
-                  ACCEPTING NEW PROJECTS FOR 2025
+                  ACCEPTING NEW PROJECTS FOR 2026
                 </div>
               </ScrollFadeIn>
               <ScrollFadeIn delay={0.2}>
@@ -1587,7 +1654,7 @@ const YuktiGenesisSite = () => {
                     index={index}
                     totalSteps={roadmapSteps.length}
                     config={config}
-                  />
+                                   />
                 </ScrollFadeIn>
               ))}
             </div>
@@ -1634,11 +1701,34 @@ const YuktiGenesisSite = () => {
       {/* Footer (Now outside of main to ensure full width) */}
       <Footer config={config} />
 
+      {showBrochure && (
+        <BrochurePromotion
+          imageSrc="/promo/brochure.jpeg"
+          width={280}
+          height={380}
+          top={120}
+          left={20}
+          onClose={() => setShowBrochure(false)}
+        />
+      )}
+
+      {/* {showBrochure && (
+        <BrochurePromotion
+          imageSrc="/promo/brochure.jpeg"
+          width={280}
+          height={380}
+          top={220}
+          left={950}
+          onClose={() => setShowBrochure(false)}
+        />
+      )} */}
+
+
       {/* NEW: Floating Dock Navigation (Z-50) */}
       <FloatingDock activeSection={activeSection} config={config} />
 
       {/* --- Global CSS Styles (Combined & Enhanced) --- */}
-      <style jsx global>{`
+      <style>{`
         /* -------------------------------------------------- */
         /* website.txt CSS (Retained/Adapted) */
         /* -------------------------------------------------- */
@@ -1740,6 +1830,22 @@ const YuktiGenesisSite = () => {
         .animate-border-pulse {
           animation: border-pulse 3s infinite ease-in-out;
         }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-slideUp {
+          animation: slideUp 0.8s ease-out both;
+        }
+
       `}</style>
     </div>
   );
