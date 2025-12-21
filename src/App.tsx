@@ -1004,7 +1004,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
             </div>
             <div className={`text-xs ${linkAccent}`}>
               {" "}
-              Design • Build • Scale{" "}
+              Intelligence Engineered{" "}
             </div>
           </div>
         </div>
