@@ -734,8 +734,8 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 					<button
 						onClick={() => setFormType("login")}
 						className={`flex-1 py-2 font-semibold transition-colors duration-300 ${isLogin
-								? "border-b-2 border-indigo-500 text-indigo-500"
-								: inactiveText
+							? "border-b-2 border-indigo-500 text-indigo-500"
+							: inactiveText
 							}`}
 					>
 						Login
@@ -743,8 +743,8 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 					<button
 						onClick={() => setFormType("signup")}
 						className={`flex-1 py-2 font-semibold transition-colors duration-300 ${!isLogin
-								? "border-b-2 border-indigo-500 text-indigo-500"
-								: inactiveText
+							? "border-b-2 border-indigo-500 text-indigo-500"
+							: inactiveText
 							}`}
 					>
 						Sign Up
@@ -790,36 +790,36 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 const serviceData = {
 	"Content & Platform Focus": [
 		{
-			title: "Business & Corporate Sites",
-			desc: "Crafting professional platforms to showcase services, build client trust, and drive attraction for your company.",
+			title: "Business & Corporate Websites",
+			desc: "Elegant, professional platforms that beautifully showcase your brand, build lasting client trust, and attract meaningful connections.",
 			icon: "🏢",
 		},
 		{
-			title: "E-commerce & Retail Solutions",
-			desc: "Developing secure online stores with product management, payment gateways, and feature-rich shopping experiences.",
+			title: "E-commerce & Online Stores",
+			desc: "Secure, intuitive online shops complete with seamless product management, trusted payment gateways, and delightful shopping experiences.",
 			icon: "🛍️",
 		},
 		{
-			title: "Blog & Content Hubs",
-			desc: "Building robust platforms for sharing articles, tutorials, and news with powerful content management and distribution features.",
+			title: "Blogs & Content Platforms",
+			desc: "Powerful, easy-to-manage hubs for sharing inspiring articles, guides, and stories that engage and grow your audience effortlessly.",
 			icon: "✍️",
 		},
 		{
-			title: "Portfolio & Creative Showcases",
-			desc: "Designing stunning digital portfolios for artists, photographers, and creatives to display their work effectively and attract opportunities.",
+			title: "Portfolios & Creative Showcases",
+			desc: "Stunning, tailored digital portfolios that highlight your creative work with elegance and help you attract the right opportunities.",
 			icon: "🖼️",
 		},
 		{
-			title: "Educational & Resource Hubs",
-			desc: "Creating information-dense websites for in-depth knowledge, training, and community resources.",
+			title: "Educational & Resource Platforms",
+			desc: "Thoughtfully designed websites rich with knowledge, training materials, and resources that educate and empower your community.",
 			icon: "📚",
 		},
 		{
 			title: "High-Conversion Landing Pages",
-			desc: "Designing focused, single-page sites optimized with strong call-to-actions to maximize campaign conversion rates.",
+			desc: "Focused, beautifully crafted single-page experiences with compelling calls-to-action designed to turn visitors into loyal customers.",
 			icon: "🎯",
 		},
-	],
+	]
 };
 
 const roadmapSteps = [
@@ -978,8 +978,8 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 		>
 			<div
 				className={`w-full max-w-6xl mx-auto flex items-center justify-between px-4 transition-all duration-500 ${isScrolled
-						? "rounded-2xl border " + headerBorder
-						: "rounded-none border-transparent"
+					? "rounded-2xl border " + headerBorder
+					: "rounded-none border-transparent"
 					}`}
 			>
 				{/* Logo/Brand */}
@@ -1093,11 +1093,19 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 
 type FAQItemProps = {
 	question: string;
+	answer: string;
+	isOpen: boolean;
+	onToggle: () => void;
 	config: any;
 };
 
-const FAQItem = ({ question, config }: FAQItemProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+const FAQItem = ({
+	question,
+	answer,
+	isOpen,
+	onToggle,
+	config,
+}: FAQItemProps) => {
 	const bg = config.isDark ? "bg-gray-800/70" : "bg-gray-100/70";
 	const hoverBg = config.isDark
 		? "hover:bg-gray-800/50"
@@ -1108,28 +1116,37 @@ const FAQItem = ({ question, config }: FAQItemProps) => {
 
 	return (
 		<div
-			className={`border-b ${border} cursor-pointer transition-colors duration-300 ${isOpen ? bg : hoverBg
-				} rounded-lg p-4`}
-			onClick={() => setIsOpen(!isOpen)}
+			className={`
+        border ${border} rounded-lg p-4 cursor-pointer
+        transition-all duration-300
+        ${isOpen ? bg : hoverBg}
+      `}
+			onClick={onToggle}
 		>
+			{/* Question Row */}
 			<div className={`flex justify-between items-center ${text}`}>
 				<p className="font-semibold">{question}</p>
-				<span className="text-indigo-400 transform transition-transform duration-300">
-					{isOpen ? "-" : "+"}
+				<span
+					className={`
+            text-indigo-400 text-xl
+            transform transition-transform duration-300
+            ${isOpen ? "rotate-45" : "rotate-0"}
+          `}
+				>
+					+
 				</span>
 			</div>
+
+			{/* Answer */}
 			{isOpen && (
-				<div className={`mt-2 ${descText} text-sm animate-fadeIn`}>
-					<p>
-						The answer to the question is highly specific to the complexity and
-						scope of your project. We offer a detailed consultation and project
-						breakdown to give you an accurate estimate.
-					</p>
+				<div className={`mt-3 ${descText} text-sm animate-fadeIn`}>
+					<p>{answer}</p>
 				</div>
 			)}
 		</div>
 	);
 };
+
 
 const ContactForm = ({ config }) => {
 	const [selectedContactType, setSelectedContactType] = useState("form");
@@ -1151,8 +1168,8 @@ const ContactForm = ({ config }) => {
 				<button
 					onClick={() => setSelectedContactType("form")}
 					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${selectedContactType === "form"
-							? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
-							: buttonTextInactive
+						? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
+						: buttonTextInactive
 						}`}
 				>
 					Send a Message
@@ -1160,8 +1177,8 @@ const ContactForm = ({ config }) => {
 				<button
 					onClick={() => setSelectedContactType("booking")}
 					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${selectedContactType === "booking"
-							? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
-							: buttonTextInactive
+						? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
+						: buttonTextInactive
 						}`}
 				>
 					Book a Call
@@ -1197,8 +1214,8 @@ const ContactForm = ({ config }) => {
 				) : (
 					<div
 						className={`p-8 rounded-2xl border border-indigo-500/50 ${config.isDark
-								? "bg-gray-800/60 text-white"
-								: "bg-white/60 text-gray-900"
+							? "bg-gray-800/60 text-white"
+							: "bg-white/60 text-gray-900"
 							} shadow-2xl text-center space-y-4`}
 					>
 						<p className="text-xl font-medium">
@@ -1415,7 +1432,7 @@ const Footer = ({ config }) => {
 					className={`mt-10 pt-4 border-t ${config.borderPrimary}
           flex flex-col md:flex-row justify-between gap-3 text-xs ${textSecondary}`}
 				>
-					<span>© 2026 Yukti Genesis</span>
+					<span>© {new Date().getFullYear()} Yukti Genesis</span>
 					<span>Design • Build • Scale</span>
 				</div>
 			</div>
@@ -1429,11 +1446,13 @@ const Footer = ({ config }) => {
 
 const YuktiGenesisSite = () => {
 	const [theme, setTheme] = useState("dark"); // Start with dark theme
-	const { isScrolled, activeSection } = useScrollState();
+	const { activeSection } = useScrollState();
+	// const { isScrolled, activeSection } = useScrollState();
 	const [isAuthModalOpen, setIsAuthModal] = useState(false);
 	const [authFormType, setAuthFormType] = useState("login");
 	const config = getThemeConfig(theme);
 	const [showBrochure, setShowBrochure] = useState(false);
+	const [openIndex, setOpenIndex] = useState<number | null>(null);
 
 	const toggleTheme = () =>
 		setTheme((prev) => (prev === "dark" ? "light" : "dark"));
@@ -1449,6 +1468,35 @@ const YuktiGenesisSite = () => {
 	const textSecondary = config.textSecondary;
 	const sectionBg = config.sectionBg;
 	const borderPrimary = config.borderPrimary;
+
+	const faqs = [
+		{
+			question: "What types of projects do you work on?",
+			answer:
+				"We work on a wide range of digital projects including websites, web applications, SaaS platforms, mobile apps, APIs, dashboards, and innovative custom solutions tailored to business needs.",
+		},
+		{
+			question: "What is your typical delivery timeline?",
+			answer:
+				"Delivery timelines depend on project scope and complexity. Small projects usually take 1–3 weeks, while larger or custom solutions may take 4–12 weeks with clear milestones.",
+		},
+		{
+			question: "How do you price your projects?",
+			answer:
+				"We follow flexible pricing models including fixed-price, hourly, and milestone-based pricing. After understanding your requirements, we provide a transparent and detailed cost estimate.",
+		},
+		{
+			question: "Do you provide post-launch support or maintenance?",
+			answer:
+				"Yes, we offer ongoing maintenance, performance optimization, feature upgrades, and technical support to ensure your product runs smoothly after launch.",
+		},
+		{
+			question: "Can you help with innovative or experimental ideas?",
+			answer:
+				"Absolutely. We enjoy working on innovative and experimental ideas. From MVPs to proof-of-concepts, we help turn unique ideas into scalable digital products.",
+		},
+	];
+
 
 	return (
 		<div
@@ -1468,14 +1516,15 @@ const YuktiGenesisSite = () => {
 			)}
 
 			{/* Header (Z-40) */}
+			{/* isScrolled={isScrolled} */}
 			<Header
-				isScrolled={isScrolled}
+				isScrolled={true}
 				openAuthModal={openAuthModal}
 				toggleTheme={toggleTheme}
 				config={config}
 			/>
 
-			<main className="relative z-10 pt-24 pb-16">
+			<main className="relative z-10 pt-4 pb-16">
 				{" "}
 				{/* Increased bottom padding */}
 				{/* Hero Section */}
@@ -1489,12 +1538,12 @@ const YuktiGenesisSite = () => {
 							<ScrollFadeIn delay={0.1}>
 								<div
 									className={`inline-flex items-center gap-2 text-sm text-indigo-400 font-semibold tracking-wide animate-fadeIn px-3 py-1 rounded-full border transition-colors duration-500 ${config.isDark
-											? "bg-indigo-900/50 border-indigo-700/50"
-											: "bg-indigo-100/50 border-indigo-300/50"
+										? "bg-indigo-900/50 border-indigo-700/50"
+										: "bg-indigo-100/50 border-indigo-300/50"
 										}`}
 								>
 									<span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>{" "}
-									ACCEPTING NEW PROJECTS FOR 2026
+									ACCEPTING NEW PROJECTS FOR {new Date().getFullYear()}
 								</div>
 							</ScrollFadeIn>
 							<ScrollFadeIn delay={0.2}>
@@ -1515,9 +1564,8 @@ const YuktiGenesisSite = () => {
 								<p
 									className={`text-lg max-w-lg leading-relaxed ${textSecondary}`}
 								>
-									Yukti Genesis is a digital product studio. We don't just build
-									websites; we engineer revenue-generating assets for startups
-									and visionaries.
+									We don't just build websites — we craft lasting digital assets.
+									Your requirement. Our expertise. Built to endure and excel.
 								</p>
 							</ScrollFadeIn>
 							<ScrollFadeIn delay={0.4}>
@@ -1531,8 +1579,8 @@ const YuktiGenesisSite = () => {
 									<a
 										href="#services"
 										className={`px-8 py-4 bg-transparent border-2 font-bold rounded-full transition-all flex items-center gap-2 ${config.isDark
-												? "border-white/20 text-white hover:bg-white/5"
-												: "border-gray-300 text-gray-800 hover:bg-gray-100"
+											? "border-white/20 text-white hover:bg-white/5"
+											: "border-gray-300 text-gray-800 hover:bg-gray-100"
 											}`}
 									>
 										View Work
@@ -1560,8 +1608,7 @@ const YuktiGenesisSite = () => {
 								Platforms We <span className="text-indigo-500">Engineer</span>
 							</h2>
 							<p className={`text-center mb-10 text-lg ${textSecondary}`}>
-								Targeted development across various content, commerce, and
-								informational platform types.
+								Expert development of tailored digital platforms across content, commerce, and informational categories.
 							</p>
 						</ScrollFadeIn>
 						<div className="space-y-12">
@@ -1667,18 +1714,24 @@ const YuktiGenesisSite = () => {
 					</ScrollFadeIn>
 				</section>
 				{/* FAQ Section */}
+
 				<section
 					className={`max-w-6xl mx-auto p-6 ${sectionBg} rounded-2xl shadow transition-colors duration-500 mt-6 border ${borderPrimary}`}
 				>
 					<ScrollFadeIn>
 						<h2 className={`text-2xl font-bold mb-4 ${textPrimary}`}>FAQs</h2>
-						<div className="space-y-2">
-							{[
-								"What is your delivery timeline?",
-								"How do you price projects?",
-								"Do you offer maintenance?",
-							].map((q, i) => (
-								<FAQItem key={i} question={q} config={config} />
+						<div className="space-y-3">
+							{faqs.map((faq, index) => (
+								<FAQItem
+									key={index}
+									question={faq.question}
+									answer={faq.answer}
+									isOpen={openIndex === index}
+									onToggle={() =>
+										setOpenIndex(openIndex === index ? null : index)
+									}
+									config={config}
+								/>
 							))}
 						</div>
 					</ScrollFadeIn>
