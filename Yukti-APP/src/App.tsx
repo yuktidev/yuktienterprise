@@ -1455,6 +1455,11 @@ const YuktiGenesisSite = () => {
 	const config = getThemeConfig(theme);
 	const [showBrochure, setShowBrochure] = useState(false);
 	const [openIndex, setOpenIndex] = useState<number | null>(null);
+	// useEffect(() => {
+	// fetch("http://localhost:8000/api/health/")
+	// 	.then(res => res.json())
+	// 	.then(data => console.log(data));
+	// }, []);
 
 	const toggleTheme = () =>
 		setTheme((prev) => (prev === "dark" ? "light" : "dark"));
