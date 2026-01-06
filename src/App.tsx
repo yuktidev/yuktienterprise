@@ -1062,7 +1062,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 							<NeoIcons.X className="w-8 h-8" />
 						</button>
 					</div>
-					<div className="flex flex-col space-y-4 mt-8">
+					<div className={`flex flex-col space-y-4 px-3 ${headerBg}`}>
 						{navItems.map((item, i) => (
 							<a
 								key={i}
