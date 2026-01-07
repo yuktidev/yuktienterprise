@@ -1,0 +1,40 @@
+{
+  "hash": "a637327d",
+  "configHash": "8b46d274",
+  "lockfileHash": "e7106600",
+  "browserHash": "ff54806a",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "175a82f4",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "6f8b55f1",
+      "needsInterop": true
+    },
+    "react-icons/fa": {
+      "src": "../../node_modules/react-icons/fa/index.mjs",
+      "file": "react-icons_fa.js",
+      "fileHash": "0e1ff567",
+      "needsInterop": false
+    },
+    "react-icons/md": {
+      "src": "../../node_modules/react-icons/md/index.mjs",
+      "file": "react-icons_md.js",
+      "fileHash": "6dd24688",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-NLMI4Z4O": {
+      "file": "chunk-NLMI4Z4O.js"
+    },
+    "chunk-ANYMWHWL": {
+      "file": "chunk-ANYMWHWL.js"
+    }
+  }
+}
