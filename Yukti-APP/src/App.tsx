@@ -11,6 +11,24 @@ import { MdClose } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 
+import { getApiBaseUrl } from "./config/env";
+
+const API_BASE_URL = getApiBaseUrl();
+
+if (!API_BASE_URL) {
+  // show fallback UI / disable buttons / mock data
+  console.log("API unavailable");
+} else {
+	console.log("API Base URL:", API_BASE_URL);
+}
+
+const fetchHealth = async () => {
+  if (!API_BASE_URL) return;
+
+  const res = await fetch(`${API_BASE_URL}/health/`);
+  return res.json();
+};
+
 
 // ====================================================================
 // 2. THEME CONFIGURATION HELPER (NEW)
@@ -1262,11 +1280,23 @@ const YuktiGenesisSite = () => {
 	const config = getThemeConfig(theme);
 	const [showBrochure, setShowBrochure] = useState(false);
 	const [openIndex, setOpenIndex] = useState<number | null>(null);
-	// useEffect(() => {
-	// fetch("http://localhost:8000/api/health/")
-	// 	.then(res => res.json())
-	// 	.then(data => console.log(data));
-	// }, []);
+	const [health, setHealth] = useState<any>(null);
+
+	useEffect(() => {
+		fetchHealth().then(setHealth);
+	}, []);
+
+	// return (
+	// 	<div>
+	// 	<h1>Yukti App</h1>
+
+	// 	{health ? (
+	// 		<pre>{JSON.stringify(health, null, 2)}</pre>
+	// 	) : (
+	// 		<p>API not available</p>
+	// 	)}
+	// 	</div>
+	// );
 
 	const toggleTheme = () =>
 		setTheme((prev) => (prev === "dark" ? "light" : "dark"));
