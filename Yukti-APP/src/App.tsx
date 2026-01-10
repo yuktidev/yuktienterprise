@@ -11,6 +11,7 @@ import { MdClose } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import emailjs from "@emailjs/browser";
+import toast from "react-hot-toast";
 
 
 // ====================================================================
@@ -980,11 +981,13 @@ const ContactForm = ({ config }) => {
 			)
 			.then(() => {
 				console.log("Message sent successfully 🚀");
+				toast.success("Message sent successfully 🚀");
 				formRef.current.reset();
 			})
 			.catch((err) => {
 				console.error(err);
 				console.log("Failed to send message ❌");
+				toast.error("Failed to send message ❌ Please try again.");
 			})
 			.finally(() => setLoading(false));
 	};
