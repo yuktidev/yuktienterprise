@@ -1063,7 +1063,7 @@ const ContactForm = ({ config }) => {
 							disabled={loading}
 							className="w-full py-3 mt-4 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white shadow-lg transition-all duration-300"
 						>
-							{loading ? "Sending..." : "Send Message"}
+							{loading ? "Sending..." : "Send a Mail"}
 						</button>
 					</form>
 				) : (
