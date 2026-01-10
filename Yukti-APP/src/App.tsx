@@ -959,6 +959,13 @@ const FAQItem = ({
 
 const ContactForm = ({ config }) => {
 	const [selectedContactType, setSelectedContactType] = useState("form");
+
+	const [formData, setFormData] = useState({
+		name: "",
+		email: "",
+		message: "",
+	});
+
 	const buttonBg = config.isDark ? "bg-gray-800" : "bg-gray-200";
 	const buttonTextInactive = config.isDark
 		? "text-gray-400 hover:bg-gray-700"
@@ -969,6 +976,35 @@ const ContactForm = ({ config }) => {
 	const inputText = config.isDark ? "text-white" : "text-gray-900";
 	const inputBorder = config.isDark ? "border-gray-600" : "border-gray-300";
 
+	const handleChange = (e) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		const phoneNumber = "918886070408"; // 🔴 change if needed
+
+		const message = `
+📩 *New Project Inquiry*
+
+👤 Name: ${formData.name}
+📧 Email: ${formData.email}
+
+📝 Project Details:
+${formData.message}
+		`;
+
+		const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+			message
+		)}`;
+
+		window.open(whatsappURL, "_blank");
+
+		// reset form
+		setFormData({ name: "", email: "", message: "" });
+	};
+
 	return (
 		<div className="max-w-4xl mx-auto">
 			<div
@@ -976,43 +1012,63 @@ const ContactForm = ({ config }) => {
 			>
 				<button
 					onClick={() => setSelectedContactType("form")}
-					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${selectedContactType === "form"
-						? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
-						: buttonTextInactive
-						}`}
+					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${
+						selectedContactType === "form"
+							? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
+							: buttonTextInactive
+					}`}
 				>
 					Send a Message
 				</button>
+
 				<button
 					onClick={() => setSelectedContactType("booking")}
-					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${selectedContactType === "booking"
-						? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
-						: buttonTextInactive
-						}`}
+					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${
+						selectedContactType === "booking"
+							? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
+							: buttonTextInactive
+					}`}
 				>
 					Book a Call
 				</button>
 			</div>
+
 			<div className="max-w-3xl mx-auto">
 				{selectedContactType === "form" ? (
 					<form
+						onSubmit={handleSubmit}
 						className={`space-y-4 p-8 rounded-2xl shadow-xl border transition-all duration-500 hover:shadow-2xl ${formBg} ${formBorder}`}
 					>
 						<input
 							type="text"
+							name="name"
+							required
+							value={formData.name}
+							onChange={handleChange}
 							placeholder="Your Name"
 							className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
 						/>
+
 						<input
 							type="email"
+							name="email"
+							required
+							value={formData.email}
+							onChange={handleChange}
 							placeholder="Your Email"
 							className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
 						/>
+
 						<textarea
-							placeholder="Tell us about your project..."
+							name="message"
+							required
 							rows={4}
+							value={formData.message}
+							onChange={handleChange}
+							placeholder="Tell us about your project..."
 							className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
 						></textarea>
+
 						<button
 							type="submit"
 							className="w-full py-3 mt-4 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transform hover:scale-[1.01] transition-all duration-300"
