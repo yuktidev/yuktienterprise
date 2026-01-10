@@ -3,229 +3,14 @@ import BrochurePromotion from "./components/BrochurePromotion";
 import ChatBot from "./components/ChatBot/ChatBot";
 import { FaInstagram, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { BsBoxSeam } from "react-icons/bs";
+import { FaBolt } from "react-icons/fa";
+import { FaTerminal } from "react-icons/fa";
+import { MdMenu } from "react-icons/md";
+import { MdClose } from "react-icons/md";
+import { MdLightMode } from "react-icons/md";
+import { MdDarkMode } from "react-icons/md";
 
-// ====================================================================
-// 1. ICON SYSTEMS (Merged & Renamed)
-// (Icons remain unchanged)
-// ====================================================================
-
-// Icons from website.txt (Social/Utility)
-// const WhatsAppIcon = (props) => (
-// 	<svg {...props} viewBox="0 0 24 24" fill="currentColor" aria-label="WhatsApp">
-// 		<path d="M12.04 2.007c-5.52 0-10 4.48-10 10 0 1.94 0.57 3.76 1.55 5.32l-1.63 4.68 4.83-1.59c1.52 0.83 3.25 1.28 5.25 1.28 5.52 0 10-4.48 10-10s-4.48-10-10-10zm4.72 13.92c-0.28 0.17-0.78 0.26-1.07 0.3c-0.3 0.03-0.56 0.05-0.84 0.05-0.28 0-0.49-0.03-0.75-0.08-0.26-0.05-0.62-0.16-1.12-0.41-0.62-0.31-1.37-0.95-1.95-1.61-0.62-0.69-1.54-1.28-1.85-0.18-0.31-0.02-0.47 0.14-0.62 0.14-0.14 0.32-0.35 0.47-0.53 0.15-0.19 0.25-0.3 0.34-0.5c0.09-0.2 0.04-0.37-0.02-0.53-0.06-0.16-0.56-1.36-0.76-1.86-0.19-0.5-0.4-0.43-0.7-0.43-0.29 0-0.56 0.05-0.81 0.05s-0.51-0.06-0.77-0.06c-0.26 0-0.67 0.09-1.03 0.41-0.36 0.32-1.37 1.34-1.37 3.27s1.4 3.79 1.6 4.05c0.2 0.26 2.7 4.13 6.55 5.61 3.85 1.48 3.85 0.99 4.54 0.94c0.69-0.05 1.77-0.72 2.02-1.38s0.25-1.25 0.18-1.38c-0.07-0.13-0.28-0.21-0.58-0.36z" />
-// 	</svg>
-// );
-// const LinkedInIcon = (props) => (
-// 	<svg {...props} viewBox="0 0 24 24" fill="currentColor" aria-label="LinkedIn">
-// 		<path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.359-4 0v5.604h-3v-11h3v1.765c1.395-2.586 7-2.777 7 2.476v6.759z" />
-// 	</svg>
-// );
-// const MailIcon = (props) => (
-// 	<svg {...props} viewBox="0 0 24 24" fill="currentColor" aria-label="Email">
-// 		<path d="M0 3v18h24v-18h-24zm6.623 10.51l-6.623 5.489v-14.593l6.623 9.104zm10.354 0l6.623-9.104v14.593l-6.623-5.489zm-10.977-2.618l-2.008-2.753v-2.071l12.361 9.423 12.361-9.423v2.071l-2.008 2.753 2.008 2.753-12.361 9.423-12.361-9.423 2.008-2.753z" />
-// 	</svg>
-// );
-// const TwitterIcon = (props) => (
-//   <svg
-//     {...props}
-//     viewBox="0 0 24 24"
-//     fill="currentColor"
-//     aria-label="X (Twitter)"
-//   >
-//     <path d="M18.901 1.143h3.812l-7.796 8.783 9.471 14.074h-8.243l-6.223-9.284-7.147 9.284h-3.811l8.286-10.366-9.11-13.491h8.625l5.228 7.79zM17.842 21.054h2.152l-8.498-12.639h-2.31l8.653 12.639z" />
-//   </svg>
-// );
-// const InstagramIcon = (props) => (
-// 	<svg
-// 		{...props}
-// 		viewBox="0 0 24 24"
-// 		fill="currentColor"
-// 		aria-label="Instagram"
-// 	>
-// 		<path d="M12 2.163c3.204 0 3.584.012 4.85.07l.534.027c1.376.069 2.06.282 2.655.518.57.227 1.05.54 1.516 1.006.467.466.78 0.946 1.007 1.517.236.594.449 1.279.518 2.655l.027.533c.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85l-.027.534c-.069 1.376-.282 2.06-.518 2.655-.227.57-.54 1.05-1.006 1.516-.466.467-.946.78-1.517 1.007-.594.236-1.279.449-2.655.518l-.533.027c-1.266-.058-1.646-.07-4.85-.07s-3.584.012-4.85.07l-.534.027c-1.376.069-2.06.282-2.655.518-.57.227-1.05.54-1.516 1.006-.467.466-.78.946-1.007 1.517-.236.594-.449 1.279-.518 2.655l-.027.533c-.058 1.266-.07 1.646-.07 4.85s.012 3.584.07 4.85l.027.534c.069 1.376.282 2.06.518 2.655.227.57.54 1.05 1.006 1.516.466.467.946.78 1.517 1.007.594.236 1.279.449 2.655.518l.533.027c1.266.058 1.646.07 4.85.07s3.567-.01 4.793-.067c.783-.039 1.284-.187 1.637-.31.351-.123.62-.29.89-.56.27-.27.538-.437.89-.56.353-.123.854-.271 1.637-.31 1.226-.057 1.615-.067 4.793-.067zm0 2.298c-3.178 0-3.567.01-4.793.067-.783.039-1.284.187-1.637.31-.351.123-.62.29-.89.56-.27.27-.437.538-.56.89-.123.353-.271.854-.31 1.637-.057 1.226-.067 1.615-.067 4.793s.01 3.567.067 4.793c.039.783.187 1.284.31 1.637.123.351.29.62.56.89.27.27.538.437.89.56.353.123.854.271 1.637.31 1.226.057 1.615.067 4.793.067s3.567-.01 4.793-.067c.783-.039 1.284-.187 1.637-.31.351-.123.62-.29.89-.56.27-.27.538-.437.89-.56.353-.123.854-.271 1.637-.31 1.226-.057 1.615-.067 4.793-.067zm0 3.737c-3.41 0-6.195 2.785-6.195 6.195s2.785 6.195 6.195 6.195 6.195-2.785 6.195-6.195-2.785-6.195-6.195-6.195zm0 10.147c-2.18 0-3.952-1.772-3.952-3.952s1.772-3.952 3.952-3.952 3.952 1.772 3.952 3.952-1.772 3.952-3.952 3.952zm5.717-8.29a1.44 1.44 0 0 1-1.442 1.44c-.792 0-1.44-.65-1.44-1.442s.648-1.44 1.44-1.44c.792 0 1.442.65 1.442 1.44z" />
-// 	</svg>
-// );
-
-// Icons for Theme Toggle (NEW)
-const MoonIcon = (props) => (
-	<svg
-		{...props}
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-	>
-		<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-	</svg>
-);
-const SunIcon = (props) => (
-	<svg
-		{...props}
-		xmlns="http://www.w3.org/2000/svg"
-		width="24"
-		height="24"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-	>
-		<circle cx="12" cy="12" r="5"></circle>
-		<line x1="12" y1="1" x2="12" y2="3"></line>
-		<line x1="12" y1="21" x2="12" y2="23"></line>
-		<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-		<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-		<line x1="1" y1="12" x2="3" y2="12"></line>
-		<line x1="21" y1="12" x2="23" y2="12"></line>
-		<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-		<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-	</svg>
-);
-
-// Icons from new theme.txt (Neo Icons - Renamed)
-const NeoIcons = {
-	Terminal: (props) => (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<polyline points="4 17 10 11 4 5"></polyline>
-			<line x1="12" y1="19" x2="20" y2="19"></line>
-		</svg>
-	),
-	Zap: (props) => (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-		</svg>
-	),
-	Box: (props) => (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-			<polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-			<line x1="12" y1="22.08" x2="12" y2="12"></line>
-		</svg>
-	),
-	TrendingUp: (props) => (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-			<polyline points="17 6 23 6 23 12"></polyline>
-		</svg>
-	),
-	Shield: (props) => (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-		</svg>
-	),
-	Menu: (props) => (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<line x1="3" y1="12" x2="21" y2="12"></line>
-			<line x1="3" y1="6" x2="21" y2="6"></line>
-			<line x1="3" y1="18" x2="21" y2="18"></line>
-		</svg>
-	),
-	X: (props) => (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<line x1="18" y1="6" x2="6" y2="18"></line>
-			<line x1="6" y1="6" x2="18" y2="18"></line>
-		</svg>
-	),
-	Check: (props) => (
-		<svg
-			{...props}
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="3"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-		>
-			<polyline points="20 6 9 17 4 12"></polyline>
-		</svg>
-	),
-};
 
 // ====================================================================
 // 2. THEME CONFIGURATION HELPER (NEW)
@@ -293,15 +78,15 @@ const ThemedBackground = ({ config }) => (
 // NEW: Floating Dock Navigation (Uses NeoIcons)
 const FloatingDock = ({ activeSection, config }) => {
 	const links = [
-		{ id: "home", icon: <NeoIcons.Box className="w-5 h-5" />, label: "Home" },
+		{ id: "home", icon: <BsBoxSeam className="w-5 h-5" />, label: "Home" },
 		{
 			id: "services",
-			icon: <NeoIcons.Zap className="w-5 h-5" />,
+			icon: <FaBolt className="w-5 h-5" />,
 			label: "Work",
 		},
 		{
 			id: "contact",
-			icon: <NeoIcons.Terminal className="w-5 h-5" />,
+			icon: <FaTerminal className="w-5 h-5" />,
 			label: "Book",
 		},
 	];
@@ -346,6 +131,9 @@ const TerminalDisplay = () => {
 	const [lines, setLines] = useState([
 		"> Initializing system...",
 		"> Running diagnostics...",
+		"> System booting...",
+		"> Verifying encryption keys...",
+		"> Connection established.",
 	]);
 
 	useEffect(() => {
@@ -355,6 +143,25 @@ const TerminalDisplay = () => {
 			"> 0 errors found.",
 			"> Deployment successful.",
 			"> Fetching coffee ☕...",
+			"> Hydrating the DOM...",
+			"> Minifying CSS bundle...",
+			"> Allocating memory blocks...",
+			"> Establishing neural link...",
+			"> Handshaking with server...",
+			"> Warning: Awesome overload detected.",
+			"> Installing dependencies...",
+			"> Resolving promise chain...",
+			"> Pixel shifting in progress...",
+			"> Loading 3D textures...",
+			"> Pinging satellite...",
+			"> Scaling vector graphics...",
+			"> Generating seamless transitions...",
+			"> Refactoring legacy code...",
+			"> Debugging reality...",
+			"> Success: Module loaded.",
+			"> Encrypting data streams...",
+			"> Parsing JSON response...",
+			"> Warming up the servers...",
 		];
 		const interval = setInterval(() => {
 			setLines((prevLines) => {
@@ -363,7 +170,7 @@ const TerminalDisplay = () => {
 				newLines.push(commands[Math.floor(Math.random() * commands.length)]);
 				return newLines;
 			});
-		}, 2500);
+		}, 1000);
 		return () => clearInterval(interval);
 	}, []);
 
@@ -728,7 +535,7 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 						className={`text-xl p-2 rounded-full transition-colors text-indigo-400 ${config.isDark ? "hover:bg-gray-700" : "hover:bg-gray-100"
 							}`}
 					>
-						<NeoIcons.X className="w-6 h-6" />
+						<MdClose className="w-6 h-6" />
 					</button>
 				</div>
 				{/* Tab Switcher */}
@@ -963,9 +770,9 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 		: "text-gray-600 hover:text-gray-900";
 	const linkAccent = config.isDark ? "text-gray-400" : "text-gray-500";
 	const toggleIcon = config.isDark ? (
-		<SunIcon className="w-5 h-5" />
+		<MdLightMode className="w-5 h-5" />
 	) : (
-		<MoonIcon className="w-5 h-5" />
+		<MdDarkMode className="w-5 h-5" />
 	);
 	const toggleButtonClass = config.isDark
 		? "text-white hover:bg-gray-700/50"
@@ -1044,7 +851,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 						className={`${textPrimary} p-2`}
 						onClick={() => setMobileNavOpen(true)}
 					>
-						<NeoIcons.Menu className="w-6 h-6" />
+						<MdMenu className="w-6 h-6" />
 					</button>
 				</div>
 			</div>
@@ -1059,7 +866,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 							className={`${textPrimary} text-3xl`}
 							onClick={() => setMobileNavOpen(false)}
 						>
-							<NeoIcons.X className="w-8 h-8" />
+							<MdClose className="w-8 h-8" />
 						</button>
 					</div>
 					<div className={`flex flex-col space-y-4 px-3 ${headerBg}`}>

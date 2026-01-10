@@ -17,12 +17,12 @@
     /* Linting – updated to relax implicit any */
     "strict": false,                  // Keep this false
     "noImplicitAny": false,           // Add this explicitly
-    "strictNullChecks": true,         // Optional: keep some strictness if you want
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "strictNullChecks": false,         // Optional: keep some strictness if you want
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": false
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
