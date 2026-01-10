@@ -82,7 +82,7 @@ const FloatingDock = ({ activeSection, config }) => {
 		{
 			id: "services",
 			icon: <FaBolt className="w-5 h-5" />,
-			label: "Work",
+			label: "Service",
 		},
 		{
 			id: "contact",
