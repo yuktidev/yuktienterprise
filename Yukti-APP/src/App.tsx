@@ -10,6 +10,7 @@ import { MdMenu } from "react-icons/md";
 import { MdClose } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
+import emailjs from "@emailjs/browser";
 
 
 // ====================================================================
@@ -957,14 +958,36 @@ const FAQItem = ({
 };
 
 
+
+
 const ContactForm = ({ config }) => {
 	const [selectedContactType, setSelectedContactType] = useState("form");
+	const [loading, setLoading] = useState(false);
 
-	const [formData, setFormData] = useState({
-		name: "",
-		email: "",
-		message: "",
-	});
+	const formRef = useRef(null);
+
+	// 🎯 Email submit handler
+	const sendEmail = (e) => {
+		e.preventDefault();
+		setLoading(true);
+
+		emailjs
+			.sendForm(
+				"service_0vfodyh",
+				"template_j38hezd",
+				formRef.current,
+				"6dtc5TS4VMTMOwI-v"
+			)
+			.then(() => {
+				console.log("Message sent successfully 🚀");
+				formRef.current.reset();
+			})
+			.catch((err) => {
+				console.error(err);
+				console.log("Failed to send message ❌");
+			})
+			.finally(() => setLoading(false));
+	};
 
 	const buttonBg = config.isDark ? "bg-gray-800" : "bg-gray-200";
 	const buttonTextInactive = config.isDark
@@ -976,40 +999,10 @@ const ContactForm = ({ config }) => {
 	const inputText = config.isDark ? "text-white" : "text-gray-900";
 	const inputBorder = config.isDark ? "border-gray-600" : "border-gray-300";
 
-	const handleChange = (e) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
-	};
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-
-		const phoneNumber = "918886070408"; // 🔴 change if needed
-
-		const message = `
-📩 *New Project Inquiry*
-
-👤 Name: ${formData.name}
-📧 Email: ${formData.email}
-
-📝 Project Details:
-${formData.message}
-		`;
-
-		const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-			message
-		)}`;
-
-		window.open(whatsappURL, "_blank");
-
-		// reset form
-		setFormData({ name: "", email: "", message: "" });
-	};
-
 	return (
 		<div className="max-w-4xl mx-auto">
-			<div
-				className={`flex p-1 ${buttonBg} rounded-full mb-8 max-w-sm mx-auto`}
-			>
+			{/* Toggle Buttons */}
+			<div className={`flex p-1 ${buttonBg} rounded-full mb-8 max-w-sm mx-auto`}>
 				<button
 					onClick={() => setSelectedContactType("form")}
 					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${
@@ -1018,7 +1011,7 @@ ${formData.message}
 							: buttonTextInactive
 					}`}
 				>
-					Send a Message
+					Send a Mail
 				</button>
 
 				<button
@@ -1034,75 +1027,75 @@ ${formData.message}
 			</div>
 
 			<div className="max-w-3xl mx-auto">
+				{/* 📧 EMAIL FORM */}
 				{selectedContactType === "form" ? (
 					<form
-						onSubmit={handleSubmit}
+						ref={formRef}
+						onSubmit={sendEmail}
 						className={`space-y-4 p-8 rounded-2xl shadow-xl border transition-all duration-500 hover:shadow-2xl ${formBg} ${formBorder}`}
 					>
 						<input
 							type="text"
-							name="name"
+							name="from_name"
 							required
-							value={formData.name}
-							onChange={handleChange}
 							placeholder="Your Name"
-							className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
+							className={`w-full p-3 rounded-lg border ${inputBorder} ${inputBg} ${inputText}`}
 						/>
 
 						<input
 							type="email"
-							name="email"
+							name="from_email"
 							required
-							value={formData.email}
-							onChange={handleChange}
 							placeholder="Your Email"
-							className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
+							className={`w-full p-3 rounded-lg border ${inputBorder} ${inputBg} ${inputText}`}
 						/>
 
 						<textarea
 							name="message"
 							required
 							rows={4}
-							value={formData.message}
-							onChange={handleChange}
 							placeholder="Tell us about your project..."
-							className={`w-full p-3 rounded-lg border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 ${inputBg} ${inputText} placeholder-gray-400`}
-						></textarea>
+							className={`w-full p-3 rounded-lg border ${inputBorder} ${inputBg} ${inputText}`}
+						/>
 
 						<button
 							type="submit"
-							className="w-full py-3 mt-4 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transform hover:scale-[1.01] transition-all duration-300"
+							disabled={loading}
+							className="w-full py-3 mt-4 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white shadow-lg transition-all duration-300"
 						>
-							Send Message
+							{loading ? "Sending..." : "Send Message"}
 						</button>
 					</form>
 				) : (
+					/* 📅 BOOKING + WHATSAPP */
 					<div
-						className={`p-8 rounded-2xl border border-indigo-500/50 ${config.isDark
-							? "bg-gray-800/60 text-white"
-							: "bg-white/60 text-gray-900"
-							} shadow-2xl text-center space-y-4`}
+						className={`p-8 rounded-2xl border border-indigo-500/50 ${
+							config.isDark
+								? "bg-gray-800/60 text-white"
+								: "bg-white/60 text-gray-900"
+						} shadow-2xl text-center space-y-4`}
 					>
 						<p className="text-xl font-medium">
 							Schedule a discovery call to kick off your project.
 						</p>
+
 						<a
 							href="https://calendar.app.google/XAsWAepWPhYPBvaG8"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="inline-block w-full md:w-auto px-10 py-3 rounded-lg font-semibold text-center bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl shadow-indigo-500/50 transition-all duration-300 transform hover:scale-105 active:scale-[0.98]"
+							className="inline-block w-full md:w-auto px-10 py-3 rounded-lg font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl transition-all duration-300"
 						>
 							Book Now 🗓️
 						</a>
+
 						<a
 							href="https://wa.me/8886070408?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services."
 							target="_blank"
 							rel="noopener noreferrer"
-							className="inline-block w-full md:w-auto mt-4 ml-4 px-10 py-3 rounded-lg font-semibold text-center bg-green-500 text-white shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-[0.98] shadow-md hover:bg-green-600 text-white shadow-green-400/50"
+							className="inline-block w-full md:w-auto mt-4 px-10 py-3 rounded-lg font-semibold bg-green-500 hover:bg-green-600 text-white shadow-xl transition-all duration-300"
 						>
 							<div className="flex items-center justify-center gap-2">
-								{" "}
-								<FaWhatsapp size={20} /> WhatsApp Chat{" "}
+								<FaWhatsapp size={20} /> WhatsApp Chat
 							</div>
 						</a>
 					</div>
