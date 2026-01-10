@@ -1,4 +1,5 @@
 {
+  "packageManager": "pnpm@10.28.0",
   "name": "react-vite-ts",
   "private": true,
   "version": "0.0.0",
@@ -13,6 +14,7 @@
     "@emailjs/browser": "^4.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
