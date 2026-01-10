@@ -1031,7 +1031,7 @@ const ContactForm = ({ config }) => {
 							Schedule a discovery call to kick off your project.
 						</p>
 						<a
-							href="https://calendar.example.com/yukti-genesis-call"
+							href="https://calendar.app.google/XAsWAepWPhYPBvaG8"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="inline-block w-full md:w-auto px-10 py-3 rounded-lg font-semibold text-center bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl shadow-indigo-500/50 transition-all duration-300 transform hover:scale-105 active:scale-[0.98]"
