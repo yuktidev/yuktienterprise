@@ -13,9 +13,9 @@ import { MdDarkMode } from "react-icons/md";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
 
-import { getApiBaseUrl } from "./config/env";
+import { getEnvValue } from "./config/env";
 
-const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = getEnvValue("API");
 
 if (!API_BASE_URL) {
   // show fallback UI / disable buttons / mock data
@@ -992,10 +992,10 @@ const ContactForm = ({ config }) => {
 
 		emailjs
 			.sendForm(
-				"service_0vfodyh",
-				"template_j38hezd",
+				getEnvValue("MAIL_SERVICE_ID"),
+				getEnvValue("MAIL_TEMPLATE_ID"),
 				formRef.current,
-				"6dtc5TS4VMTMOwI-v"
+				getEnvValue("MAIL_PUBLIC_KEY")
 			)
 			.then(() => {
 				console.log("Message sent successfully 🚀");
@@ -1101,7 +1101,7 @@ const ContactForm = ({ config }) => {
 						</p>
 
 						<a
-							href="https://calendar.app.google/XAsWAepWPhYPBvaG8"
+							href={getEnvValue("CALENDAR_URL")}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="inline-block w-full md:w-auto px-10 py-3 rounded-lg font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl transition-all duration-300"
