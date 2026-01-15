@@ -12,6 +12,7 @@ import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 import { getEnvValue } from "./config/env";
 
@@ -540,6 +541,7 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 	const inactiveText = config.isDark
 		? "text-gray-500 hover:text-gray-300"
 		: "text-gray-400 hover:text-gray-600";
+	const navigate = useNavigate();
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm p-4 transition-opacity duration-300">
@@ -600,10 +602,14 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 						className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
 					/>
 					<button
-						type="submit"
-						className="w-full py-3 mt-6 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transform hover:scale-[1.01] transition-all duration-300"
+						type="button"
+						onClick={() => {
+							closeModal();
+							navigate("/admin");
+					}}
+					className="w-full py-3 mt-6 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transition-all"
 					>
-						{isLogin ? "Login" : "Create Account"}
+					{isLogin ? "Login" : "Create Account"}
 					</button>
 				</form>
 			</div>
@@ -843,12 +849,12 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 							{item}
 						</a>
 					))}
-					{/* <button
+					<button
 						onClick={() => openAuthModal("login")}
 						className="ml-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
 					>
 						Client Login
-					</button> */}
+					</button>
 					<button
 						onClick={toggleTheme}
 						aria-label="Toggle Theme"
@@ -900,7 +906,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 								{item}
 							</a>
 						))}
-						{/* <button
+						<button
 							onClick={() => {
 								openAuthModal("login");
 								setMobileNavOpen(false);
@@ -908,7 +914,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 							className="py-3 bg-indigo-600 text-white rounded-lg text-lg transform hover:scale-[0.99] transition-transform duration-300 mt-4"
 						>
 							Client Login / Signup
-						</button> */}
+						</button>
 					</div>
 				</div>
 			)}
