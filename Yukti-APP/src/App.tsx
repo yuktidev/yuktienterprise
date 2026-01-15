@@ -1110,7 +1110,7 @@ const ContactForm = ({ config }) => {
 						</a>
 
 						<a
-							href="https://wa.me/8886070408?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services."
+							href="https://wa.me/918886070408?text=Hello%2C%20I%20want%20to%20contact%20you%20regarding%20your%20services."
 							target="_blank"
 							rel="noopener noreferrer"
 							className="inline-block w-full md:w-auto mt-4 px-10 py-3 rounded-lg font-semibold bg-green-500 hover:bg-green-600 text-white shadow-xl transition-all duration-300"
