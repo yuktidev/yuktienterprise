@@ -18,15 +18,17 @@ const AdminLayout = () => {
 	const [authUser, setAuthUser] = useState<any>(null);
 	const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-	/* ================= AUTH PROTECTION ================= */
+	/* ================= ADMIN ROUTE PROTECTION ================= */
 	useEffect(() => {
 		const storedUser = localStorage.getItem("authUser");
 
+		// If user tries to access admin without login → redirect home
 		if (!storedUser) {
-			navigate("/login", { replace: true });
-		} else {
-			setAuthUser(JSON.parse(storedUser));
+			navigate("/", { replace: true });
+			return;
 		}
+
+		setAuthUser(JSON.parse(storedUser));
 	}, [navigate]);
 
 	const closeMobileSidebar = () => setMobileOpen(false);
@@ -43,7 +45,7 @@ const AdminLayout = () => {
 		localStorage.removeItem("authUser");
 		setAuthUser(null);
 		setShowProfileMenu(false);
-		navigate("/login", { replace: true });
+		navigate("/", { replace: true }); // ✅ HOME
 	};
 
 	return (
@@ -137,7 +139,7 @@ const AdminLayout = () => {
 					<div className="relative">
 						<div
 							onClick={() => setShowProfileMenu(!showProfileMenu)}
-							className="flex items-center gap-2 cursor-pointer"
+							className="flex items-center gap-2 cursor-pointer select-none"
 						>
 							<MdAccountCircle className="w-8 h-8 text-gray-600" />
 							{authUser && (
