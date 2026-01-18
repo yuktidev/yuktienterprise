@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
 	MdDashboard,
@@ -14,6 +14,16 @@ import {
 const AdminLayout = () => {
 	const navigate = useNavigate();
 	const [mobileOpen, setMobileOpen] = useState(false);
+	const [authUser, setAuthUser] = useState<any>(null);
+	const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("authUser");
+		if (storedUser) {
+			setAuthUser(JSON.parse(storedUser));
+		}
+	}, []);
+
 
 	const closeMobileSidebar = () => {
 		setMobileOpen(false);
@@ -152,8 +162,49 @@ const AdminLayout = () => {
 						</h1>
 					</div>
 
-					<MdAccountCircle className="w-8 h-8 text-gray-600" />
+					{/* User Profile */}
+					<div className="relative">
+						{/* PROFILE CLICK AREA */}
+						<div
+							onClick={() => setShowProfileMenu((prev) => !prev)}
+							className="flex items-center gap-2 cursor-pointer select-none"
+						>
+							<MdAccountCircle className="w-8 h-8 text-gray-600" />
+
+							{authUser && (
+								<>
+									{/* Mobile: First Name */}
+									<span className="text-sm font-medium text-gray-700 md:hidden">
+										{authUser.firstName}
+									</span>
+
+									{/* Tablet & Desktop: Full Name */}
+									<span className="hidden md:inline text-sm font-medium text-gray-700">
+										{authUser.fullName}
+									</span>
+								</>
+							)}
+						</div>
+
+						{/* DROPDOWN */}
+						{showProfileMenu && authUser && (
+							<div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
+								<button
+									onClick={() => {
+										localStorage.removeItem("authUser");
+										setAuthUser(null);
+										setShowProfileMenu(false);
+									}}
+									className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+								>
+									Logout
+								</button>
+							</div>
+						)}
+					</div>
+
 				</header>
+
 
 				{/* ================= PAGE CONTENT ================= */}
 				<main className="flex-1 p-6 overflow-y-auto">
