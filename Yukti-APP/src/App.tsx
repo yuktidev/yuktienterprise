@@ -898,7 +898,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 						onClick={() => openAuthModal("login")}
 						className="ml-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
 					>
-						Client Login
+						Login
 					</button>
 					<button
 						onClick={toggleTheme}
@@ -958,7 +958,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 							}}
 							className="py-3 bg-indigo-600 text-white rounded-lg text-lg transform hover:scale-[0.99] transition-transform duration-300 mt-4"
 						>
-							Client Login / Signup
+							Login / Signup
 						</button>
 					</div>
 				</div>
