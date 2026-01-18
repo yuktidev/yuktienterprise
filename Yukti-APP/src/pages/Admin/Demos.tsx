@@ -1,4 +1,5 @@
 import { MdShoppingCart } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const demos = [
 	{
@@ -12,6 +13,8 @@ const demos = [
 ];
 
 const Demo = () => {
+
+	const navigate = useNavigate();
 	return (
 		<div className="space-y-6">
 			<div>
@@ -25,7 +28,7 @@ const Demo = () => {
 				{demos.map((demo) => (
 					<div
 						key={demo.id}
-						onClick={() => window.open(demo.path, "_blank")}
+						onClick={() => window.open(`${window.location.origin}${demo.path}`, "_blank")}
 						className="
 							bg-white p-6 rounded-xl shadow-sm
 							hover:shadow-md transition cursor-pointer
