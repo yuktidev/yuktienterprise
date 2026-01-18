@@ -4,21 +4,39 @@ from rest_framework.response import Response
 from config.connections import PostgresConnection
 import json
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exemptimport traceback
 from django.contrib.auth.hashers import check_password
-
+import traceback
 
 @api_view(['GET'])
 def health(request):
-	print(" Health check endpoint called ")
-	db = PostgresConnection()
-	cursor = db.get_cursor()
+    print("Health check endpoint called")
 
+    try:
+        db = PostgresConnection()
+        cursor = db.get_cursor()
 
-	cursor.execute("SELECT current_user, current_database();")
-	print(cursor.fetchone())
-	db.close()
-	return Response({"status": "Yukti API is running"})
+        cursor.execute("SELECT current_user, current_database();")
+        result = cursor.fetchone()
+        print("DB RESULT:", result)
+
+        db.close()
+
+        return Response({
+            "status": "Yukti API is running",
+            "db": "connected"
+        })
+
+    except Exception as e:
+        print("❌ DB ERROR OCCURRED")
+        print(e)
+        traceback.print_exc()
+
+        return Response(
+            {"error": str(e)},
+            status=500
+        )
+
 
 @csrf_exempt
 def login_api(request):
