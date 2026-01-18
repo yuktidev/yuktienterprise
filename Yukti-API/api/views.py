@@ -10,77 +10,76 @@ from django.contrib.auth.hashers import check_password
 
 @api_view(['GET'])
 def health(request):
+	print(" Health check endpoint called ")
+	db = PostgresConnection()
+	cursor = db.get_cursor()
 
-    # db = PostgresConnection()
-    # cursor = db.get_cursor()
 
-    # cursor.execute("SELECT * FROM public.users;")
-    # rows = cursor.fetchall()
-    # print("DB user rows ========= ", rows)
-
-    # db.close()
-    return Response({"status": "Yukti API is running"})
+	cursor.execute("SELECT current_user, current_database();")
+	print(cursor.fetchone())
+	db.close()
+	return Response({"status": "Yukti API is running"})
 
 @csrf_exempt
 def login_api(request):
-    if request.method != "POST":
-        return JsonResponse(
-            {"message": "Method not allowed"},
-            status=405
-        )
+	if request.method != "POST":
+		return JsonResponse(
+			{"message": "Method not allowed"},
+			status=405
+		)
 
-    try:
-        body = json.loads(request.body)
-        email = body.get("email")
-        password = body.get("password")
+	try:
+		body = json.loads(request.body)
+		email = body.get("email")
+		password = body.get("password")
 
-        if not email or not password:
-            return JsonResponse(
-                {"authenticated": False, "message": "Email and password required"},
-                status=400
-            )
+		if not email or not password:
+			return JsonResponse(
+				{"authenticated": False, "message": "Email and password required"},
+				status=400
+			)
 
-        db = PostgresConnection()
+		db = PostgresConnection()
 
-        try:
-            cursor = db.get_cursor()
-            cursor.execute(
-                """
-                SELECT id, email, password
-                FROM users
-                WHERE email = %s
-                  AND is_active = TRUE
-                  AND is_delete = FALSE
-                """,
-                (email,)
-            )
-            user = cursor.fetchone()
-        finally:
-            db.close()
+		try:
+			cursor = db.get_cursor()
+			cursor.execute(
+				"""
+				SELECT id, email, password
+				FROM users
+				WHERE email = %s
+				AND is_active = TRUE
+				AND is_delete = FALSE
+				""",
+				(email,)
+			)
+			user = cursor.fetchone()
+		finally:
+			db.close()
 
-        if not user:
-            return JsonResponse(
-                {"authenticated": False, "message": "Invalid email"},
-                status=401
-            )
+		if not user:
+			return JsonResponse(
+				{"authenticated": False, "message": "Invalid email"},
+				status=401
+			)
 
-        if password != user["password"]:
-            return JsonResponse(
-                {"authenticated": False, "message": "Invalid email or password"},
-                status=401
-            )
+		if password != user["password"]:
+			return JsonResponse(
+				{"authenticated": False, "message": "Invalid email or password"},
+				status=401
+			)
 
-        return JsonResponse(
-            {
-                "authenticated": True,
-                "user_id": user["id"],
-                "email": user["email"]
-            },
-            status=200
-        )
+		return JsonResponse(
+			{
+				"authenticated": True,
+				"user_id": user["id"],
+				"email": user["email"]
+			},
+			status=200
+		)
 
-    except Exception as e:
-        return JsonResponse(
-            {"authenticated": False, "message": "Server error"},
-            status=500
-        )
+	except Exception as e:
+		return JsonResponse(
+			{"authenticated": False, "message": "Server error"},
+			status=500
+		)
