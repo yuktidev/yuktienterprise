@@ -866,6 +866,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 		: "bg-white bg-opacity-95";
 	const [authUser, setAuthUser] = useState<any>(null);
 	const [showProfileMenu, setShowProfileMenu] = useState(false);
+	const navigate = useNavigate();
 	const handleLogout = () => {
 		// Remove user from localStorage
 		localStorage.removeItem("authUser");
@@ -947,8 +948,16 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 									>
 										Logout
 									</button>
+
+									<button
+										onClick={() => navigate("/admin")}
+										className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+									>
+										Admin
+									</button>
 								</div>
 							)}
+
 						</div>
 					) : (
 						<button
@@ -1025,6 +1034,23 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 
 								{/* Dropdown */}
 								{showProfileMenu && (
+									<div className="absolute left-3 w-40 bg-white rounded-lg shadow-lg border z-50">
+										<button
+											onClick={handleLogout}
+											className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+										>
+											Logout
+										</button>
+
+										<button
+											onClick={() => navigate("/admin")}
+											className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+										>
+											Admin
+										</button>
+									</div>
+								)}
+								{/* {showProfileMenu && (
 									<div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
 										<button
 											onClick={handleLogout}
@@ -1033,7 +1059,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 											Logout
 										</button>
 									</div>
-								)}
+								)} */}
 							</div>
 						) : (
 							<button
