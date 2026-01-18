@@ -5,12 +5,14 @@ import "./index.css";
 import AppToaster from "./components/AppToaster.tsx";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from "@vercel/analytics/react"
+import AppRouter from "./AppRouter";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <SpeedInsights/>
     <Analytics/>
-    <App />
+    {/* <App /> */}
+    <AppRouter />
     <AppToaster />
   </React.StrictMode>,
 );

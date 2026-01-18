@@ -12,6 +12,25 @@ import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
+import { getEnvValue } from "./config/env";
+
+const API_BASE_URL = getEnvValue("API");
+
+if (!API_BASE_URL) {
+  // show fallback UI / disable buttons / mock data
+  console.log("API unavailable");
+} else {
+	console.log("API Base URL:", API_BASE_URL);
+}
+
+const fetchHealth = async () => {
+  if (!API_BASE_URL) return;
+
+  const res = await fetch(`${API_BASE_URL}/health/`);
+  return res.json();
+};
 
 
 // ====================================================================
@@ -522,6 +541,46 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 	const inactiveText = config.isDark
 		? "text-gray-500 hover:text-gray-300"
 		: "text-gray-400 hover:text-gray-600";
+	const navigate = useNavigate();
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [fullName, setFullName] = useState("");
+
+
+	const handleLogin = async () => {
+		if (!email || !password) {
+			toast.error("Please enter email and password");
+			return;
+		}
+
+		try {
+			const response = await fetch(`${API_BASE_URL}/auth/login/`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					email,
+					password,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (data.authenticated) {
+				toast.success("Login successful 🚀");
+				closeModal();
+				navigate("/admin");
+			} else {
+				toast.error("Invalid email or password ❌");
+			}
+		} catch (error) {
+			console.error(error);
+			toast.error("Something went wrong. Please try again.");
+		}
+	};
+
+
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm p-4 transition-opacity duration-300">
@@ -567,26 +626,36 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 					<input
 						type="email"
 						placeholder="Email Address"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
 						className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
 					/>
+
 					{!isLogin && (
 						<input
 							type="text"
 							placeholder="Full Name"
+							value={fullName}
+							onChange={(e) => setFullName(e.target.value)}
 							className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
 						/>
 					)}
 					<input
 						type="password"
 						placeholder="Password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
 						className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
 					/>
+
 					<button
-						type="submit"
-						className="w-full py-3 mt-6 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transform hover:scale-[1.01] transition-all duration-300"
+						type="button"
+						onClick={handleLogin}
+						className="w-full py-3 mt-6 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transition-all"
 					>
 						{isLogin ? "Login" : "Create Account"}
 					</button>
+
 				</form>
 			</div>
 		</div>
@@ -825,12 +894,12 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 							{item}
 						</a>
 					))}
-					{/* <button
+					<button
 						onClick={() => openAuthModal("login")}
 						className="ml-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
 					>
-						Client Login
-					</button> */}
+						Login
+					</button>
 					<button
 						onClick={toggleTheme}
 						aria-label="Toggle Theme"
@@ -882,15 +951,15 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 								{item}
 							</a>
 						))}
-						{/* <button
+						<button
 							onClick={() => {
 								openAuthModal("login");
 								setMobileNavOpen(false);
 							}}
 							className="py-3 bg-indigo-600 text-white rounded-lg text-lg transform hover:scale-[0.99] transition-transform duration-300 mt-4"
 						>
-							Client Login / Signup
-						</button> */}
+							Login / Signup
+						</button>
 					</div>
 				</div>
 			)}
@@ -974,10 +1043,10 @@ const ContactForm = ({ config }) => {
 
 		emailjs
 			.sendForm(
-				"service_0vfodyh",
-				"template_j38hezd",
+				getEnvValue("MAIL_SERVICE_ID"),
+				getEnvValue("MAIL_TEMPLATE_ID"),
 				formRef.current,
-				"6dtc5TS4VMTMOwI-v"
+				getEnvValue("MAIL_PUBLIC_KEY")
 			)
 			.then(() => {
 				console.log("Message sent successfully 🚀");
@@ -1083,7 +1152,7 @@ const ContactForm = ({ config }) => {
 						</p>
 
 						<a
-							href="https://calendar.app.google/XAsWAepWPhYPBvaG8"
+							href={getEnvValue("CALENDAR_URL")}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="inline-block w-full md:w-auto px-10 py-3 rounded-lg font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl transition-all duration-300"
@@ -1314,11 +1383,23 @@ const YuktiGenesisSite = () => {
 	const config = getThemeConfig(theme);
 	const [showBrochure, setShowBrochure] = useState(false);
 	const [openIndex, setOpenIndex] = useState<number | null>(null);
-	// useEffect(() => {
-	// fetch("http://localhost:8000/api/health/")
-	// 	.then(res => res.json())
-	// 	.then(data => console.log(data));
-	// }, []);
+	const [health, setHealth] = useState<any>(null);
+
+	useEffect(() => {
+		fetchHealth().then(setHealth);
+	}, []);
+
+	// return (
+	// 	<div>
+	// 	<h1>Yukti App</h1>
+
+	// 	{health ? (
+	// 		<pre>{JSON.stringify(health, null, 2)}</pre>
+	// 	) : (
+	// 		<p>API not available</p>
+	// 	)}
+	// 	</div>
+	// );
 
 	const toggleTheme = () =>
 		setTheme((prev) => (prev === "dark" ? "light" : "dark"));
