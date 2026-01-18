@@ -7,17 +7,21 @@ import Demo from "./pages/Admin/Demos";
 import Projects from "./pages/Admin/Projects";
 import Team from "./pages/Admin/Team";
 import Clients from "./pages/Admin/Clients";
+import EcommerceDemo from "./pages/Demo/ecommerce/EcommerceDemo";
 
 const AppRouter = () => {
 	return (
 		<BrowserRouter>
 			<Routes>
-				{/* MAIN WEBSITE */}
+				{/* ================= MAIN WEBSITE ================= */}
 				<Route path="/" element={<YuktiGenesisSite />} />
 
-				{/* ADMIN MODULE */}
+				{/* ================= DEMO APPS (PUBLIC) ================= */}
+				<Route path="/demo/ecommerce" element={<EcommerceDemo />} />
+
+				{/* ================= ADMIN MODULE ================= */}
 				<Route path="/admin" element={<AdminLayout />}>
-					{/* IMPORTANT: redirect /admin -> /admin/dashboard */}
+					{/* redirect /admin -> /admin/dashboard */}
 					<Route index element={<Navigate to="dashboard" replace />} />
 
 					<Route path="dashboard" element={<Dashboard />} />
@@ -30,5 +34,6 @@ const AppRouter = () => {
 		</BrowserRouter>
 	);
 };
+
 
 export default AppRouter;

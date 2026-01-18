@@ -542,6 +542,45 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 		? "text-gray-500 hover:text-gray-300"
 		: "text-gray-400 hover:text-gray-600";
 	const navigate = useNavigate();
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [fullName, setFullName] = useState("");
+
+
+	const handleLogin = async () => {
+		if (!email || !password) {
+			toast.error("Please enter email and password");
+			return;
+		}
+
+		try {
+			const response = await fetch(`${API_BASE_URL}/auth/login/`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					email,
+					password,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (data.authenticated) {
+				toast.success("Login successful 🚀");
+				closeModal();
+				navigate("/admin");
+			} else {
+				toast.error("Invalid email or password ❌");
+			}
+		} catch (error) {
+			console.error(error);
+			toast.error("Something went wrong. Please try again.");
+		}
+	};
+
+
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm p-4 transition-opacity duration-300">
@@ -587,30 +626,36 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 					<input
 						type="email"
 						placeholder="Email Address"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
 						className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
 					/>
+
 					{!isLogin && (
 						<input
 							type="text"
 							placeholder="Full Name"
+							value={fullName}
+							onChange={(e) => setFullName(e.target.value)}
 							className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
 						/>
 					)}
 					<input
 						type="password"
 						placeholder="Password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
 						className={`w-full p-3 rounded-lg border ${inputBorder} focus:ring-2 focus:ring-indigo-500 ${inputBg} ${text} placeholder-gray-500`}
 					/>
+
 					<button
 						type="button"
-						onClick={() => {
-							closeModal();
-							navigate("/admin");
-					}}
-					className="w-full py-3 mt-6 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transition-all"
+						onClick={handleLogin}
+						className="w-full py-3 mt-6 rounded-lg font-semibold text-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg transition-all"
 					>
-					{isLogin ? "Login" : "Create Account"}
+						{isLogin ? "Login" : "Create Account"}
 					</button>
+
 				</form>
 			</div>
 		</div>
