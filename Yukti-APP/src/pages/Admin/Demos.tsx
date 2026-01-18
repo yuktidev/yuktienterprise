@@ -1,3 +1,4 @@
+import React from "react";
 import { MdShoppingCart } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
@@ -10,12 +11,13 @@ const demos = [
     icon: <MdShoppingCart className="w-8 h-8 text-indigo-600" />,
     path: "/demo/ecommerce",
   },
+  // You can add more demo items here
 ];
 
 const Demo = () => {
   const navigate = useNavigate();
 
-  // Redirect to login if user is not authenticated
+  // Redirect to login if not authenticated
   React.useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -23,21 +25,23 @@ const Demo = () => {
     }
   }, [navigate]);
 
+  // Handle demo click safely
   const handleDemoClick = (path) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      // If not logged in, redirect to login
+      // If user is logged out, force login
       navigate("/login", { replace: true });
       return;
     }
 
-    // Navigate to demo page safely in same tab
+    // Navigate to demo page in the same tab
     navigate(path);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
+      {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">Demo Applications</h1>
         <p className="text-gray-600 mt-1">
@@ -45,6 +49,7 @@ const Demo = () => {
         </p>
       </div>
 
+      {/* Demo Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {demos.map((demo) => (
           <div
