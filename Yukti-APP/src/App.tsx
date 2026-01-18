@@ -13,23 +13,23 @@ import { MdDarkMode } from "react-icons/md";
 import emailjs from "@emailjs/browser";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import { useLoader } from "./Loader/LoaderProvider";
 import { getEnvValue } from "./config/env";
 
 const API_BASE_URL = getEnvValue("API");
 
 if (!API_BASE_URL) {
-  // show fallback UI / disable buttons / mock data
-  console.log("API unavailable");
+	// show fallback UI / disable buttons / mock data
+	console.log("API unavailable");
 } else {
 	console.log("API Base URL:", API_BASE_URL);
 }
 
 const fetchHealth = async () => {
-  if (!API_BASE_URL) return;
+	if (!API_BASE_URL) return;
 
-  const res = await fetch(`${API_BASE_URL}/health/`);
-  return res.json();
+	const res = await fetch(`${API_BASE_URL}/health/`);
+	return res.json();
 };
 
 
@@ -545,6 +545,7 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [fullName, setFullName] = useState("");
+	const { startLoader, stopLoader } = useLoader();
 
 
 	const handleLogin = async () => {
@@ -552,6 +553,7 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 			toast.error("Please enter email and password");
 			return;
 		}
+		startLoader();
 
 		try {
 			const response = await fetch(`${API_BASE_URL}/auth/login/`, {
@@ -568,6 +570,15 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 			const data = await response.json();
 
 			if (data.authenticated) {
+				const userData = {
+					userId: data.user_id,
+					email: data.email,
+					firstName: data.firstName,
+					lastName: data.lastName,
+					fullName: data.fullName,
+				};
+
+				localStorage.setItem("authUser", JSON.stringify(userData));
 				toast.success("Login successful 🚀");
 				closeModal();
 				navigate("/admin");
@@ -577,6 +588,8 @@ const AuthModal = ({ formType, setFormType, closeModal, config }) => {
 		} catch (error) {
 			console.error(error);
 			toast.error("Something went wrong. Please try again.");
+		} finally {
+			stopLoader();
 		}
 	};
 
@@ -851,6 +864,25 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 	const mobileNavBg = config.isDark
 		? "bg-[#0a0a0a] bg-opacity-95"
 		: "bg-white bg-opacity-95";
+	const [authUser, setAuthUser] = useState<any>(null);
+	const [showProfileMenu, setShowProfileMenu] = useState(false);
+	const handleLogout = () => {
+		// Remove user from localStorage
+		localStorage.removeItem("authUser");
+
+		// Reset auth state
+		setAuthUser(null);
+
+		// Close dropdown
+		setShowProfileMenu(false);
+	};
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("authUser");
+		if (storedUser) {
+			setAuthUser(JSON.parse(storedUser));
+		}
+	}, []);
 
 	return (
 		<header
@@ -894,12 +926,41 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 							{item}
 						</a>
 					))}
-					<button
-						onClick={() => openAuthModal("login")}
-						className="ml-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
-					>
-						Login
-					</button>
+
+					{/* AUTH BUTTON */}
+					{authUser ? (
+						<div className="relative ml-4">
+							{/* Profile Button */}
+							<button
+								onClick={() => setShowProfileMenu((prev) => !prev)}
+								className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
+							>
+								{authUser.fullName}
+							</button>
+
+							{/* Dropdown */}
+							{showProfileMenu && (
+								<div className="absolute left-3 w-40 bg-white rounded-lg shadow-lg border z-50">
+									<button
+										onClick={handleLogout}
+										className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+									>
+										Logout
+									</button>
+								</div>
+							)}
+						</div>
+					) : (
+						<button
+							onClick={() => openAuthModal("login")}
+							className="ml-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
+						>
+							Login / Signup
+						</button>
+					)}
+
+
+					{/* THEME TOGGLE */}
 					<button
 						onClick={toggleTheme}
 						aria-label="Toggle Theme"
@@ -908,6 +969,7 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 						{toggleIcon}
 					</button>
 				</nav>
+
 
 				{/* Mobile Menu Button & Toggle */}
 				<div className="flex items-center lg:hidden gap-2">
@@ -951,15 +1013,36 @@ const Header = ({ isScrolled, openAuthModal, toggleTheme, config }) => {
 								{item}
 							</a>
 						))}
-						<button
-							onClick={() => {
-								openAuthModal("login");
-								setMobileNavOpen(false);
-							}}
-							className="py-3 bg-indigo-600 text-white rounded-lg text-lg transform hover:scale-[0.99] transition-transform duration-300 mt-4"
-						>
-							Login / Signup
-						</button>
+						{authUser ? (
+							<div className="relative ml-4">
+								{/* Profile Button */}
+								<button
+									onClick={() => setShowProfileMenu((prev) => !prev)}
+									className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
+								>
+									{authUser.fullName}
+								</button>
+
+								{/* Dropdown */}
+								{showProfileMenu && (
+									<div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
+										<button
+											onClick={handleLogout}
+											className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+										>
+											Logout
+										</button>
+									</div>
+								)}
+							</div>
+						) : (
+							<button
+								onClick={() => openAuthModal("login")}
+								className="ml-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-semibold transition-all transform hover:scale-105"
+							>
+								Login / Signup
+							</button>
+						)}
 					</div>
 				</div>
 			)}
@@ -1043,20 +1126,20 @@ const ContactForm = ({ config }) => {
 
 		emailjs
 			.sendForm(
-				getEnvValue("MAIL_SERVICE_ID"),
-				getEnvValue("MAIL_TEMPLATE_ID"),
+				getEnvValue("VITE_MAIL_SERVICE_ID"),
+				getEnvValue("VITE_MAIL_TEMPLATE_ID"),
 				formRef.current,
-				getEnvValue("MAIL_PUBLIC_KEY")
+				getEnvValue("VITE_MAIL_PUBLIC_KEY")
 			)
 			.then(() => {
-				console.log("Message sent successfully 🚀");
-				toast.success("Message sent successfully 🚀");
+				console.log("Mail sent successfully 🚀");
+				toast.success("Mail sent successfully 🚀");
 				formRef.current.reset();
 			})
 			.catch((err) => {
 				console.error(err);
-				console.log("Failed to send message ❌");
-				toast.error("Failed to send message ❌ Please try again.");
+				console.log("Failed to send mail ❌");
+				toast.error("Failed to send mail ❌ Please try again.");
 			})
 			.finally(() => setLoading(false));
 	};
@@ -1077,22 +1160,20 @@ const ContactForm = ({ config }) => {
 			<div className={`flex p-1 ${buttonBg} rounded-full mb-8 max-w-sm mx-auto`}>
 				<button
 					onClick={() => setSelectedContactType("form")}
-					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${
-						selectedContactType === "form"
+					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${selectedContactType === "form"
 							? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
 							: buttonTextInactive
-					}`}
+						}`}
 				>
 					Send a Mail
 				</button>
 
 				<button
 					onClick={() => setSelectedContactType("booking")}
-					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${
-						selectedContactType === "booking"
+					className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 ${selectedContactType === "booking"
 							? "bg-indigo-600 text-white shadow-xl shadow-indigo-500/50"
 							: buttonTextInactive
-					}`}
+						}`}
 				>
 					Book a Call
 				</button>
@@ -1108,7 +1189,15 @@ const ContactForm = ({ config }) => {
 					>
 						<input
 							type="text"
-							name="from_name"
+							name="title"
+							required
+							placeholder="Your Title"
+							className={`w-full p-3 rounded-lg border ${inputBorder} ${inputBg} ${inputText}`}
+						/>
+						
+						<input
+							type="text"
+							name="name"
 							required
 							placeholder="Your Name"
 							className={`w-full p-3 rounded-lg border ${inputBorder} ${inputBg} ${inputText}`}
@@ -1116,7 +1205,7 @@ const ContactForm = ({ config }) => {
 
 						<input
 							type="email"
-							name="from_email"
+							name="user_email"
 							required
 							placeholder="Your Email"
 							className={`w-full p-3 rounded-lg border ${inputBorder} ${inputBg} ${inputText}`}
@@ -1141,18 +1230,17 @@ const ContactForm = ({ config }) => {
 				) : (
 					/* 📅 BOOKING + WHATSAPP */
 					<div
-						className={`p-8 rounded-2xl border border-indigo-500/50 ${
-							config.isDark
+						className={`p-8 rounded-2xl border border-indigo-500/50 ${config.isDark
 								? "bg-gray-800/60 text-white"
 								: "bg-white/60 text-gray-900"
-						} shadow-2xl text-center space-y-4`}
+							} shadow-2xl text-center space-y-4`}
 					>
 						<p className="text-xl font-medium">
 							Schedule a discovery call to kick off your project.
 						</p>
 
 						<a
-							href={getEnvValue("CALENDAR_URL")}
+							href={getEnvValue("VITE_CALENDAR_URL")}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="inline-block w-full md:w-auto px-10 py-3 rounded-lg font-semibold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl transition-all duration-300"

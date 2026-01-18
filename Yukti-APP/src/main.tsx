@@ -6,13 +6,15 @@ import AppToaster from "./components/AppToaster.tsx";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from "@vercel/analytics/react"
 import AppRouter from "./AppRouter";
+import { LoaderProvider } from "./Loader/LoaderProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <SpeedInsights/>
     <Analytics/>
-    {/* <App /> */}
-    <AppRouter />
-    <AppToaster />
+    <LoaderProvider>
+      <AppRouter />
+      <AppToaster />
+    </LoaderProvider>
   </React.StrictMode>,
 );

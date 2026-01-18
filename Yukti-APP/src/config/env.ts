@@ -3,14 +3,14 @@ export function getEnvValue(key): string | null {
   let value = "";
   if (key == 'API') {
     value = import.meta.env.VITE_API_BASE_URL;
-  } else if (key == 'CALENDAR') {
+  } else if (key == 'VITE_CALENDAR') {
     value = import.meta.env.VITE_CALENDAR_URL;
-  } else if (key == 'MAIL_SERVICE_ID') {
+  } else if (key == 'VITE_MAIL_SERVICE_ID') {
     value = import.meta.env.VITE_MAIL_SERVICE_ID;
     console.log(`MAIL_SERVICE_ID: ${value}`);
-  } else if (key == 'MAIL_TEMPLATE_ID') {
+  } else if (key == 'VITE_MAIL_TEMPLATE_ID') {
     value = import.meta.env.VITE_MAIL_TEMPLATE_ID;
-  } else if (key == 'MAIL_PUBLIC_KEY') {
+  } else if (key == 'VITE_MAIL_PUBLIC_KEY') {
     value = import.meta.env.VITE_MAIL_PUBLIC_KEY;
   }
 

@@ -10,7 +10,6 @@ import traceback
 
 @api_view(['GET'])
 def health(request):
-    print("Health check endpoint called")
 
     try:
         db = PostgresConnection()
@@ -18,7 +17,7 @@ def health(request):
 
         cursor.execute("SELECT current_user, current_database();")
         result = cursor.fetchone()
-        print("DB RESULT:", result)
+        # print("DB RESULT:", result)
 
         db.close()
 
@@ -63,11 +62,13 @@ def login_api(request):
 			cursor = db.get_cursor()
 			cursor.execute(
 				"""
-				SELECT id, email, password
+				SELECT id, email, password, first_name, last_name
 				FROM users
 				WHERE email = %s
 				AND is_active = TRUE
 				AND is_delete = FALSE
+				AND is_current = TRUE
+				LIMIT 1
 				""",
 				(email,)
 			)
@@ -91,7 +92,11 @@ def login_api(request):
 			{
 				"authenticated": True,
 				"user_id": user["id"],
-				"email": user["email"]
+				"email": user["email"],
+				"firstName": user.get("first_name", ""),
+				"lastName": user.get("last_name", ""),
+				"fullName": user.get("first_name", "") + " " + user.get("last_name", ""),
+				"message": "Login successful"
 			},
 			status=200
 		)
