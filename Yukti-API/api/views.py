@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from config.connections import PostgresConnection
 import json
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exemptimport traceback
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
 import traceback
 
