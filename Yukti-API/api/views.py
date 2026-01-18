@@ -11,14 +11,14 @@ from django.contrib.auth.hashers import check_password
 @api_view(['GET'])
 def health(request):
 
-    db = PostgresConnection()
-    cursor = db.get_cursor()
+    # db = PostgresConnection()
+    # cursor = db.get_cursor()
 
-    cursor.execute("SELECT * FROM public.users;")
-    rows = cursor.fetchall()
-    print("DB user rows ========= ", rows)
+    # cursor.execute("SELECT * FROM public.users;")
+    # rows = cursor.fetchall()
+    # print("DB user rows ========= ", rows)
 
-    db.close()
+    # db.close()
     return Response({"status": "Yukti API is running"})
 
 @csrf_exempt
