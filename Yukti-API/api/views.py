@@ -14,7 +14,7 @@ def health(request):
     db = PostgresConnection()
     cursor = db.get_cursor()
 
-    cursor.execute("SELECT * FROM users;")
+    cursor.execute("SELECT * FROM public.users;")
     rows = cursor.fetchall()
     print("DB user rows ========= ", rows)
 
