@@ -1523,6 +1523,7 @@ const YuktiGenesisSite = () => {
 		setIsAuthModal(true);
 	};
 	const closeModal = () => setIsAuthModal(false);
+	const navigate = useNavigate();
 
 	// Common Themed Classes
 	const textPrimary = config.textPrimary;
@@ -1637,15 +1638,15 @@ const YuktiGenesisSite = () => {
 									>
 										Start Project
 									</a>
-									{/* <a
-										href="#services"
-										className={`px-8 py-4 bg-transparent border-2 font-bold rounded-full transition-all flex items-center gap-2 ${config.isDark
+									<a
+										onClick={() => navigate("/demos")}
+										className={`px-8 py-4 bg-transparent border-2 font-bold rounded-full transition-all cursor-pointer flex items-center gap-2 ${config.isDark
 											? "border-white/20 text-white hover:bg-white/5"
 											: "border-gray-300 text-gray-800 hover:bg-gray-100"
 											}`}
 									>
-										View Work
-									</a> */}
+										View Demos
+									</a>
 								</div>
 							</ScrollFadeIn>
 						</div>

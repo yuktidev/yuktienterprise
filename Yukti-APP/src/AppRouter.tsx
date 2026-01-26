@@ -8,6 +8,10 @@ import Projects from "./pages/Admin/Projects";
 import Team from "./pages/Admin/Team";
 import Clients from "./pages/Admin/Clients";
 import EcommerceDemo from "./pages/Demo/ecommerce/EcommerceDemo";
+import BusinessDemo from "./pages/Demo/business/BusinessDemo";
+import PortfolioDemo from "./pages/Demo/portfolio/portfolioDemo";
+import EducationDemo from "./pages/Demo/education/Education";
+import PublicLayout from "./pages/Admin/CommonLayout";
 
 const AppRouter = () => {
 	return (
@@ -15,9 +19,20 @@ const AppRouter = () => {
 			<Routes>
 				{/* ================= MAIN WEBSITE ================= */}
 				<Route path="/" element={<YuktiGenesisSite />} />
+				<Route
+					path="/demos"
+					element={
+						<PublicLayout>
+							<Demo />
+						</PublicLayout>
+					}
+				/>
 
 				{/* ================= DEMO APPS (PUBLIC) ================= */}
 				<Route path="/demo/ecommerce" element={<EcommerceDemo />} />
+				<Route path="/demo/business" element={<BusinessDemo />} />
+				<Route path="/demo/portfolio" element={<PortfolioDemo />} />
+				<Route path="/demo/education" element={<EducationDemo />} />
 
 				{/* ================= ADMIN MODULE ================= */}
 				<Route path="/admin" element={<AdminLayout />}>

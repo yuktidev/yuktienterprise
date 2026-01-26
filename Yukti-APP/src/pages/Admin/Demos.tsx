@@ -1,5 +1,7 @@
 import { MdShoppingCart } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { MdBusinessCenter, MdSchool } from "react-icons/md";
+import { RiBriefcase4Line } from "react-icons/ri";
 
 const demos = [
 	{
@@ -9,6 +11,30 @@ const demos = [
 			"Full-stack e-commerce demo with products, cart, checkout, and admin features.",
 		icon: <MdShoppingCart className="w-8 h-8 text-indigo-600" />,
 		path: "/demo/ecommerce",
+	},
+	{
+		id: 2,
+		title: "Business",
+		description:
+			"Featuring the business with best dashboard and analytics tools.",
+		icon: <MdBusinessCenter className="w-8 h-8 text-indigo-600" />,
+		path: "/demo/business",
+	},
+	{
+		id: 3,
+		title: "Portfolio",
+		description:
+			"Showcase your work and projects with a sleek portfolio demo.",
+		icon: <RiBriefcase4Line className="w-8 h-8 text-indigo-600" />,
+		path: "/demo/portfolio",
+	},
+	{
+		id: 4,
+		title: "Education & Resources",
+		description:
+			"A demo for educational content, courses, and resource management.",
+		icon: <MdSchool className="w-8 h-8 text-indigo-600" />,
+		path: "/demo/education",
 	},
 ];
 
